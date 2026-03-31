@@ -1,0 +1,7 @@
+interface:
+  display_name: "Doc2X CLI Guide"
+  short_description: "Install, configure, and use @noedgeai/doc2x-cli for document parsing, translation, and batch processing"
+  default_prompt: "Help me install and use the Doc2X CLI to parse PDF documents to Markdown."
+
+# Agent-agnostic skill - works with any LLM provider.
+# No provider-specific configuration required.
