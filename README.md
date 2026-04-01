@@ -1,102 +1,122 @@
-# Doc2X CLI Skill
+# @noedgeai/doc2x-cli-skills
 
-Agent skill for installing, configuring, and using **@noedgeai/doc2x-cli** — a CLI tool for document parsing, translation, and batch processing. Works with Claude Code, Codex CLI, and any agent supporting the [Agent Skills](https://agentskills.io) standard.
+Claude Code 技能插件，用于安装、配置和使用 **@noedgeai/doc2x-cli** —— 文档解析、翻译与批量处理工具。
 
-## Available Skills
+## 安装
 
-| Skill | Description |
-|-------|-------------|
-| `doc2x-cli` | Parse PDFs/images to Markdown, LaTeX, Word, HTML, or PDF. Translate documents to 10 languages. Batch-process directories in parallel. Manage translation glossaries. |
+### 前置条件
 
-## Installation
-
-### Claude Code
+为 `@noedgeai` 作用域配置 GitHub Packages registry（一次性操作）：
 
 ```bash
-# Personal scope — all your projects
-cp -r skills/doc2x-cli ~/.claude/skills/doc2x-cli
-
-# Project scope — shared with collaborators
-cp -r skills/doc2x-cli .claude/skills/doc2x-cli
+npm config set @noedgeai:registry=https://npm.pkg.github.com
 ```
 
-Or load as a plugin (includes plugin manifest):
+> 本包托管在 GitHub Packages 上且公开访问，无需登录或配置 token。
+
+### 通过 npx 一键安装
 
 ```bash
-claude --plugin-dir ./doc2x-cli-skill
+# 安装到个人作用域（所有项目生效）
+npx @noedgeai/doc2x-cli-skills
+
+# 安装到项目作用域（仅当前项目，可与协作者共享）
+npx @noedgeai/doc2x-cli-skills --project
 ```
 
-### Codex CLI / Other Agent Skills Agents
+脚本会自动将技能文件复制到对应的 `~/.claude/skills/doc2x-cli` 或 `.claude/skills/doc2x-cli` 目录。
+
+### 手动安装
 
 ```bash
-# User scope — all your projects
-cp -r skills/doc2x-cli ~/.agents/skills/doc2x-cli
-
-# Repo scope — this project only
-cp -r skills/doc2x-cli .agents/skills/doc2x-cli
+npm i @noedgeai/doc2x-cli-skills
 ```
 
-### Verify
+然后手动复制技能文件：
 
-- **Claude Code**: type `/doc2x-cli` — it should appear in autocomplete.
-- **Codex CLI**: skill is auto-discovered after copy.
+```bash
+# 个人作用域
+cp -r node_modules/@noedgeai/doc2x-cli-skills/skills/doc2x-cli ~/.claude/skills/doc2x-cli
 
-## Usage
+# 项目作用域
+cp -r node_modules/@noedgeai/doc2x-cli-skills/skills/doc2x-cli .claude/skills/doc2x-cli
+```
 
-**Claude Code:**
+### Codex CLI / 其他 Agent
+
+```bash
+# 用户作用域
+cp -r node_modules/@noedgeai/doc2x-cli-skills/skills/doc2x-cli ~/.agents/skills/doc2x-cli
+
+# 仓库作用域
+cp -r node_modules/@noedgeai/doc2x-cli-skills/skills/doc2x-cli .agents/skills/doc2x-cli
+```
+
+### 验证
+
+在 Claude Code 中输入 `/doc2x-cli`，应能在自动补全中看到该技能。
+
+## 使用
 
 ```
 /doc2x-cli
-/doc2x-cli how to parse a PDF to Markdown
-/doc2x-cli batch processing setup
+/doc2x-cli 如何将 PDF 解析为 Markdown
+/doc2x-cli 批量处理配置
 ```
 
-**Codex CLI:**
+## 包含内容
+
+| 技能 | 说明 |
+|------|------|
+| `doc2x-cli` | 将 PDF/图片解析为 Markdown、LaTeX、Word、HTML 或 PDF。支持文档翻译（10 种语言）、目录批量并行处理、翻译术语表管理。 |
 
 ```
-$doc2x-cli help me convert PDFs
-```
-
-**Any agent** — describe your task naturally:
-
-```
-I need to convert a batch of PDF files to Markdown using doc2x
-```
-
-## Skill Structure
-
-```
-doc2x-cli/
-├── SKILL.md                   # Entry point
+skills/doc2x-cli/
+├── SKILL.md                   # 入口与快速参考
 ├── agents/
-│   └── agent.yaml             # Codex agent interface
+│   └── agent.yaml             # Agent 接口配置
 └── references/
-    ├── command-reference.md    # All commands, options, formats
-    ├── config-and-auth.md     # Auth, config schema, exit codes
-    └── troubleshooting.md     # Error messages, debugging tips
+    ├── command-reference.md    # 完整命令与选项参考
+    ├── config-and-auth.md     # 认证、配置模式、退出码
+    └── troubleshooting.md     # 错误信息与调试指南
 ```
 
-## Uninstall
+## 卸载
 
 ```bash
 # Claude Code
-rm -rf ~/.claude/skills/doc2x-cli    # personal
-rm -rf .claude/skills/doc2x-cli      # project
+rm -rf ~/.claude/skills/doc2x-cli    # 个人作用域
+rm -rf .claude/skills/doc2x-cli      # 项目作用域
 
-# Codex / Agents standard
-rm -rf ~/.agents/skills/doc2x-cli    # user
-rm -rf .agents/skills/doc2x-cli      # repo
+# Codex / Agents 标准
+rm -rf ~/.agents/skills/doc2x-cli    # 用户作用域
+rm -rf .agents/skills/doc2x-cli      # 仓库作用域
 ```
 
-## Requirements
+## 环境要求
 
-The skill itself has no dependencies. The CLI tool it covers requires:
+技能插件本身无运行时依赖。它所服务的 CLI 工具需要：
 
 - Node.js >= 22
-- npm (configure registry first: `npm config set @noedgeai:registry=https://npm.pkg.github.com`, then `npm i -g @noedgeai/doc2x-cli`)
-- A Doc2X account ([doc2x.noedgeai.com](https://doc2x.noedgeai.com/))
+- `@noedgeai/doc2x-cli` —— 通过 `npm i -g @noedgeai/doc2x-cli` 安装
+- Doc2X 账号 —— [doc2x.noedgeai.com](https://doc2x.noedgeai.com/)
 
-## Links
+## 发布（维护者）
 
-- [Doc2X Official Website](https://doc2x.noedgeai.com/)
-- [Agent Skills Standard](https://agentskills.io)
+本包发布到 GitHub Packages，作用域为 `@noedgeai`。
+
+```bash
+# 登录 GitHub Packages（需要 write:packages 权限的 token）
+npm login --scope=@noedgeai --auth-type=legacy --registry=https://npm.pkg.github.com
+
+# 升版
+npm version patch  # 或 minor / major
+
+# 发布
+npm publish
+```
+
+## 相关链接
+
+- [Doc2X 官网](https://doc2x.noedgeai.com/)
+- [Agent Skills 标准](https://agentskills.io)

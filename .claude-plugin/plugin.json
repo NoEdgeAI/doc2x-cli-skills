@@ -1,5 +1,5 @@
 {
-  "name": "doc2x-cli-skill",
+  "name": "@noedgeai/doc2x-cli-skills",
   "version": "0.1.0",
   "description": "Claude Code skill for installing, configuring, and using the @noedgeai/doc2x-cli document parsing and translation tool.",
   "author": {

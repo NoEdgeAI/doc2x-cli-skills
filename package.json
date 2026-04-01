@@ -1,0 +1,40 @@
+{
+  "name": "@noedgeai/doc2x-cli-skills",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Claude Code skill plugin for installing, configuring, and using @noedgeai/doc2x-cli — document parsing, translation, and batch processing.",
+  "author": {
+    "name": "noedgeai",
+    "url": "https://github.com/noedgeai"
+  },
+  "homepage": "https://doc2x.noedgeai.com/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/noedgeai/doc2x-cli-skills.git"
+  },
+  "license": "MIT",
+  "keywords": [
+    "doc2x",
+    "cli",
+    "pdf",
+    "ocr",
+    "document-parsing",
+    "translation",
+    "markdown",
+    "claude-code",
+    "agent-skills"
+  ],
+  "bin": {
+    "doc2x-cli-skills": "./bin/install.js"
+  },
+  "files": [
+    "bin",
+    "skills",
+    ".claude-plugin",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}
