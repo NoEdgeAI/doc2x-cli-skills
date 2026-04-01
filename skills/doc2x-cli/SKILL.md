@@ -4,7 +4,7 @@ description: "Installs and operates @noedgeai/doc2x-cli for document parsing, tr
 license: MIT
 metadata:
   author: noedgeai
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # Doc2X CLI
