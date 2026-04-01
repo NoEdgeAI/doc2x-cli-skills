@@ -68,7 +68,7 @@ defaults:
     contextualTranslation: false
   batch:
     glob: "**/*.{pdf,png,jpg,jpeg}"
-    concurrency: 4
+    concurrency: 1
     continueOnError: false
     skipExisting: true
     report: ./my-report.json
@@ -113,7 +113,7 @@ Useful for CI/CD scripting and error handling:
 - **Global preflight**: Quota check, model validation (image models, vision models, translate model) run once before any files are processed.
 - **Per-file preflight**: File size validation and format check run for each individual file.
 - **Skip existing**: When `--skip-existing` is true (default), the CLI resolves the expected output path and skips the file if it already exists.
-- **Concurrency**: Controlled by `--concurrency` (default: 1, sequential). Uses `p-limit` for concurrency control.
+- **Concurrency**: Controlled by `--concurrency` (default: 1, sequential). Uses `p-limit` for concurrency control. **Must stay at 1** — Doc2X enforces a server-side concurrent task limit; higher values cause "task limit exceeded" errors.
 - **Error handling**: With `--continue-on-error`, the batch continues after individual failures and exits with code 6 (BatchPartialFailure). Without it, the batch stops at the first error.
 - **Report**: A JSON report is always written to `--report` path with this structure:
 

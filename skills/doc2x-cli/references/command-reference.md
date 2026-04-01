@@ -102,11 +102,13 @@ Inherits all parse and translate options. Batch-specific options:
 | Option                  | Default                       | Description                                 |
 |-------------------------|-------------------------------|---------------------------------------------|
 | `--glob <pattern>`      | `**/*.{pdf,png,jpg,jpeg}`     | Glob pattern for matching files in dirs     |
-| `--concurrency <n>`     | `1`                           | Number of parallel tasks                    |
+| `--concurrency <n>`     | `1`                           | Number of parallel tasks (**keep at 1**, see warning below) |
 | `--continue-on-error`   | false                         | Keep processing after individual failures   |
 | `--skip-existing`       | true                          | Skip files with existing output             |
 | `--report <path>`       | `./doc2x-report.json`         | JSON report output path                     |
 | `--dry-run`             | false                         | List matched files without processing       |
+
+**CRITICAL: Keep concurrency at 1.** Doc2X enforces a server-side concurrent task limit. Setting `--concurrency` above 1, or running multiple `doc2x` commands in parallel, will trigger "task limit exceeded" errors. Always process files sequentially.
 
 **Validation:**
 - `<action>` must be `parse` or `translate` — otherwise: `Invalid batch action: "<value>". Use "parse" or "translate".`

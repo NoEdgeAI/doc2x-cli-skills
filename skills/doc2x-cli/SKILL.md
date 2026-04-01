@@ -11,6 +11,8 @@ metadata:
 
 CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and translating documents to 10 languages with bilingual output.
 
+**IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). For batch commands, always use `--concurrency 1` (the default). Violating this causes "task limit exceeded" errors.
+
 $ARGUMENTS
 
 ## Quick Reference
@@ -111,11 +113,13 @@ doc2x batch <parse|translate> [inputs...] [options]
 ```
 
 ```bash
-doc2x batch parse ./docs --concurrency 4                             # Parallel parse
+doc2x batch parse ./docs                                             # Sequential parse
 doc2x batch translate ./papers --glob "**/*.pdf" --target-language en # Batch translate
 doc2x batch parse ./docs --dry-run                                    # Preview matches
 doc2x batch parse ./docs --continue-on-error --report ./report.json  # Fault-tolerant
 ```
+
+**CRITICAL: Concurrency must stay at 1 (default).** Doc2X enforces a server-side concurrent task limit — setting `--concurrency` above 1 or running multiple `doc2x` commands in parallel will trigger "task limit exceeded" errors. Always process files sequentially: one `doc2x` command at a time, `--concurrency 1`.
 
 Defaults: `--glob "**/*.{pdf,png,jpg,jpeg}"`, `--concurrency 1`, `--skip-existing true`, `--report ./doc2x-report.json`. Exit code 6 when some files fail with `--continue-on-error`.
 
