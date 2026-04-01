@@ -4,7 +4,7 @@ description: "Installs and operates @noedgeai/doc2x-cli for document parsing, tr
 license: MIT
 metadata:
   author: noedgeai
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Doc2X CLI
@@ -25,7 +25,7 @@ $ARGUMENTS
 | Translate → Chinese | `doc2x translate ./paper.pdf` |
 | Translate → English HTML | `doc2x translate ./paper.pdf --target-language en --to html` |
 | Bilingual PDF | `doc2x translate ./paper.pdf --translate-type pdf --target-language en` |
-| Batch parse | `doc2x batch parse ./docs --concurrency 4` |
+| Batch parse | `doc2x batch parse ./docs` |
 | Batch translate | `doc2x batch translate ./docs --glob "**/*.pdf" --target-language en` |
 | List models | `doc2x models list` |
 | Manage glossary | `doc2x term list` |

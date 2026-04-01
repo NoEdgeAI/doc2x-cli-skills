@@ -100,6 +100,11 @@
     - Download or export failed. May be due to network issues.
     - The CLI retries downloads with exponential backoff (configurable via `--retry`).
 
+20. **"Task limit exceeded" / concurrent task limit error**
+    - Doc2X enforces a server-side limit on concurrent tasks per account.
+    - **Cause**: Running multiple `doc2x` commands in parallel, or using `--concurrency` > 1 in batch mode.
+    - **Fix**: Always run doc2x commands sequentially — one at a time. For batch commands, keep `--concurrency 1` (the default). Never launch multiple doc2x processes in parallel.
+
 ## Debugging Tips
 
 - Add `--verbose` to see debug output: file validation details, quota check results, model validation, polling status, upload/download progress.
