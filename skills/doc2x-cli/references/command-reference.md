@@ -102,17 +102,48 @@ Inherits all parse and translate options. Batch-specific options:
 | Option                  | Default                       | Description                                 |
 |-------------------------|-------------------------------|---------------------------------------------|
 | `--glob <pattern>`      | `**/*.{pdf,png,jpg,jpeg}`     | Glob pattern for matching files in dirs     |
-| `--concurrency <n>`     | `1`                           | Number of parallel tasks (**keep at 1**, see warning below) |
 | `--continue-on-error`   | false                         | Keep processing after individual failures   |
 | `--skip-existing`       | true                          | Skip files with existing output             |
 | `--report <path>`       | `./doc2x-report.json`         | JSON report output path                     |
 | `--dry-run`             | false                         | List matched files without processing       |
 
-**CRITICAL: Keep concurrency at 1.** Doc2X enforces a server-side concurrent task limit. Setting `--concurrency` above 1, or running multiple `doc2x` commands in parallel, will trigger "task limit exceeded" errors. Always process files sequentially.
+**Note:** Batch always runs sequentially (concurrency hardcoded to 1). Running multiple `doc2x` commands in parallel will trigger "task limit exceeded" errors.
 
 **Validation:**
 - `<action>` must be `parse` or `translate` — otherwise: `Invalid batch action: "<value>". Use "parse" or "translate".`
 - At least one input file or directory must be specified — otherwise: `No input files or directories specified.`
+
+---
+
+## Login Command
+
+```bash
+doc2x login              # Opens browser for OAuth login (PKCE)
+doc2x login --no-browser  # Print the login URL instead of opening a browser
+```
+
+**Option:**
+
+| Option          | Default | Description                                      |
+|-----------------|---------|--------------------------------------------------|
+| `--no-browser`  | false   | Print the login URL instead of opening a browser |
+
+On success, OAuth credentials are saved to:
+- macOS: `~/Library/Application Support/doc2x/cli-oauth-tokens.json`
+- Windows: `%APPDATA%/doc2x/cli-oauth-tokens.json`
+- Linux: `~/.config/doc2x/cli-oauth-tokens.json`
+
+JSON output: `{"ok": true, "expiresAt": <timestamp>}`
+
+---
+
+## Logout Command
+
+```bash
+doc2x logout    # Clear stored OAuth credentials
+```
+
+Removes the stored OAuth token file. JSON output: `{"ok": true}`
 
 ---
 
@@ -178,8 +209,7 @@ These apply to all commands:
 | Option              | Default    | Description                                     |
 |---------------------|------------|-------------------------------------------------|
 | `--config <path>`   | (none)     | Path to config file (YAML or JSON)              |
-| `--auth-mode <m>`   | `client`   | Authentication mode: api or client              |
-| `--token <t>`       | (none)     | Refresh token for API mode (or `DOC2X_TOKEN`)   |
+| `--auth-mode <m>`   | `client`   | Authentication mode: `client` or `oauth`        |
 | `--timeout <ms>`    | `60000`    | API request timeout in milliseconds             |
 | `--retry <n>`       | `2`        | Retry count for downloads/exports               |
 | `--json`            | false      | Output results as JSON                          |
@@ -188,5 +218,5 @@ These apply to all commands:
 | `--no-color`        | false      | Disable colored output (auto-detected in non-TTY) |
 
 **Environment variables:**
-- `DOC2X_TOKEN` — Refresh token for API mode (fallback if `--token` not provided)
 - `NO_COLOR` — Set to any value to disable ANSI color output
+- `DOC2X_NO_UPDATE_CHECK` — Set to any value to skip update check on startup

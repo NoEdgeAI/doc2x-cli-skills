@@ -1,6 +1,6 @@
 ---
 name: doc2x-cli
-description: "Installs and operates @noedgeai/doc2x-cli for document parsing, translation, and batch processing. Trigger when user mentions doc2x, doc2x-cli, PDF to Markdown, PDF OCR, document translation, batch PDF conversion, or bilingual PDF. Covers parse, translate, batch, models, and term commands. Do NOT trigger for general PDF viewing, browser-based PDF tools, or non-doc2x workflows."
+description: "Installs and operates @noedgeai/doc2x-cli for document parsing, translation, and batch processing. Trigger when user mentions doc2x, doc2x-cli, PDF to Markdown, PDF OCR, document translation, batch PDF conversion, or bilingual PDF. Covers parse, translate, batch, login, logout, models, and term commands. Do NOT trigger for general PDF viewing, browser-based PDF tools, or non-doc2x workflows."
 license: MIT
 metadata:
   author: noedgeai
@@ -11,7 +11,7 @@ metadata:
 
 CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and translating documents to 10 languages with bilingual output.
 
-**IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). For batch commands, always use `--concurrency 1` (the default). Violating this causes "task limit exceeded" errors.
+**IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). Batch commands always run sequentially (concurrency is hardcoded to 1). Violating this causes "task limit exceeded" errors.
 
 $ARGUMENTS
 
@@ -29,6 +29,8 @@ $ARGUMENTS
 | Batch translate | `doc2x batch translate ./docs --glob "**/*.pdf" --target-language en` |
 | List models | `doc2x models list` |
 | Manage glossary | `doc2x term list` |
+| Login (OAuth) | `doc2x login` |
+| Logout | `doc2x logout` |
 
 ## Install
 
@@ -47,18 +49,26 @@ doc2x --help                      # Verify
 # Client mode (default) — reuses Doc2X desktop app session
 doc2x parse ./file.pdf
 
-# API mode — for CI/servers, no desktop app needed
-export DOC2X_TOKEN="your-refresh-token"
-doc2x parse ./file.pdf --auth-mode api
+# OAuth mode — for CI/servers, no desktop app needed
+doc2x login                                   # Opens browser for OAuth login (PKCE)
+doc2x parse ./file.pdf --auth-mode oauth      # Uses stored OAuth credentials
 
-# Or inline
-doc2x parse ./file.pdf --auth-mode api --token "your-token"
+# Print login URL instead of opening browser
+doc2x login --no-browser
+
+# Clear stored OAuth credentials
+doc2x logout
 ```
 
 Client mode connects to the desktop client at `127.0.0.1:34123`. Falls back to encrypted storage at:
 - macOS: `~/Library/Application Support/doc2x/doc2x-store-data.json`
 - Windows: `%APPDATA%/doc2x/doc2x-store-data.json`
 - Linux: `~/.config/doc2x/doc2x-store-data.json`
+
+OAuth mode stores credentials at:
+- macOS: `~/Library/Application Support/doc2x/cli-oauth-tokens.json`
+- Windows: `%APPDATA%/doc2x/cli-oauth-tokens.json`
+- Linux: `~/.config/doc2x/cli-oauth-tokens.json`
 
 ## Commands
 
@@ -119,9 +129,17 @@ doc2x batch parse ./docs --dry-run                                    # Preview 
 doc2x batch parse ./docs --continue-on-error --report ./report.json  # Fault-tolerant
 ```
 
-**CRITICAL: Concurrency must stay at 1 (default).** Doc2X enforces a server-side concurrent task limit — setting `--concurrency` above 1 or running multiple `doc2x` commands in parallel will trigger "task limit exceeded" errors. Always process files sequentially: one `doc2x` command at a time, `--concurrency 1`.
+**CRITICAL:** Batch always runs sequentially (concurrency hardcoded to 1). Running multiple `doc2x` commands in parallel will trigger "task limit exceeded" errors. Always process one `doc2x` command at a time.
 
-Defaults: `--glob "**/*.{pdf,png,jpg,jpeg}"`, `--concurrency 1`, `--skip-existing true`, `--report ./doc2x-report.json`. Exit code 6 when some files fail with `--continue-on-error`.
+Defaults: `--glob "**/*.{pdf,png,jpg,jpeg}"`, `--skip-existing true`, `--report ./doc2x-report.json`. Exit code 6 when some files fail with `--continue-on-error`.
+
+### login / logout
+
+```bash
+doc2x login               # Opens browser for OAuth login
+doc2x login --no-browser   # Print login URL instead
+doc2x logout               # Clear stored OAuth credentials
+```
 
 ### models list
 
@@ -146,8 +164,7 @@ CSV format (RFC 4180): `origin,translate,originLang,translateLang`. Header auto-
 | Option | Default | Description |
 |--------|---------|-------------|
 | `--config <path>` | — | Config file (YAML/JSON) |
-| `--auth-mode` | `client` | `api` or `client` |
-| `--token <t>` | — | Refresh token (or `DOC2X_TOKEN` env) |
+| `--auth-mode` | `client` | `client` or `oauth` |
 | `--timeout <ms>` | `60000` | API timeout |
 | `--retry <n>` | `2` | Download retry count |
 | `--json` | false | JSON output |
@@ -182,7 +199,7 @@ Load `references/troubleshooting.md` for the full list (19 error scenarios with 
 Common issues:
 - `command not found` → `npm config get prefix`, add `<prefix>/bin` to PATH
 - Auth failure (client) → desktop app must be running and logged in
-- Auth failure (API) → check `DOC2X_TOKEN` is set and valid (12h lifetime, auto-refreshes)
+- Auth failure (OAuth) → run `doc2x login` to re-authenticate via browser
 - `Unsupported image format` → convert WebP/TIFF to PNG first
 - `Model requires subscription` → upgrade at https://doc2x.noedgeai.com/
 - `Insufficient quota` → free + subscription pages exhausted

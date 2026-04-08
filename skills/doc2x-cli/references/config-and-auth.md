@@ -13,23 +13,32 @@ Reuses an authenticated Doc2X desktop client session. The CLI connects to the de
 
 **Requirements**: The Doc2X desktop app must be installed, and the user must have logged in at least once.
 
-### API Mode (`--auth-mode api`)
+### OAuth Mode (`--auth-mode oauth`)
 
-Uses a refresh token directly. Tokens are automatically refreshed (12-hour lifetime).
+Browser-based OAuth 2.0 login with PKCE. Run `doc2x login` to authenticate, then use `--auth-mode oauth` for subsequent commands. Tokens auto-refresh using one-time-use refresh tokens.
 
 ```bash
-# Set via environment variable (recommended)
-export DOC2X_TOKEN="your-refresh-token-here"
-doc2x parse ./file.pdf --auth-mode api
+# Step 1: Login via browser (one-time)
+doc2x login
+# Or print URL instead of opening browser:
+doc2x login --no-browser
 
-# Or pass inline
-doc2x parse ./file.pdf --auth-mode api --token "your-refresh-token-here"
+# Step 2: Use oauth mode
+doc2x parse ./file.pdf --auth-mode oauth
+
+# Clear credentials
+doc2x logout
 ```
+
+**OAuth token storage:**
+- macOS: `~/Library/Application Support/doc2x/cli-oauth-tokens.json`
+- Windows: `%APPDATA%/doc2x/cli-oauth-tokens.json`
+- Linux: `~/.config/doc2x/cli-oauth-tokens.json`
 
 ### Choosing the Right Mode
 
 - **Has desktop client installed and logged in** → use client mode (default)
-- **Server/CI environment or no desktop client** → use API mode with `DOC2X_TOKEN`
+- **Server/CI environment or no desktop client** → use OAuth mode (`doc2x login` + `--auth-mode oauth`)
 
 ---
 
@@ -39,8 +48,7 @@ Users can create a YAML or JSON config file to set persistent defaults.
 
 ```yaml
 # doc2x.config.yaml
-authMode: api
-token: your-refresh-token
+authMode: oauth
 timeout: 60000
 retry: 2
 defaults:
@@ -68,7 +76,6 @@ defaults:
     contextualTranslation: false
   batch:
     glob: "**/*.{pdf,png,jpg,jpeg}"
-    concurrency: 1
     continueOnError: false
     skipExisting: true
     report: ./my-report.json
@@ -113,7 +120,7 @@ Useful for CI/CD scripting and error handling:
 - **Global preflight**: Quota check, model validation (image models, vision models, translate model) run once before any files are processed.
 - **Per-file preflight**: File size validation and format check run for each individual file.
 - **Skip existing**: When `--skip-existing` is true (default), the CLI resolves the expected output path and skips the file if it already exists.
-- **Concurrency**: Controlled by `--concurrency` (default: 1, sequential). Uses `p-limit` for concurrency control. **Must stay at 1** — Doc2X enforces a server-side concurrent task limit; higher values cause "task limit exceeded" errors.
+- **Concurrency**: Hardcoded to 1 (sequential). Doc2X enforces a server-side concurrent task limit.
 - **Error handling**: With `--continue-on-error`, the batch continues after individual failures and exits with code 6 (BatchPartialFailure). Without it, the batch stops at the first error.
 - **Report**: A JSON report is always written to `--report` path with this structure:
 

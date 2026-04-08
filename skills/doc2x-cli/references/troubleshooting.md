@@ -28,10 +28,15 @@
      - Windows: `%APPDATA%/doc2x/doc2x-store-data.json`
      - Linux: `~/.config/doc2x/doc2x-store-data.json`
 
-5. **API mode failure — bad token**
-   - Verify `DOC2X_TOKEN` is set and the token is valid (not expired).
-   - Tokens have a 12-hour lifetime and auto-refresh.
-   - Check with: `echo $DOC2X_TOKEN`
+5. **OAuth mode failure — not logged in or expired**
+   - Run `doc2x login` to authenticate via browser.
+   - OAuth tokens auto-refresh using one-time-use refresh tokens.
+   - If refresh fails, re-run `doc2x login`.
+   - To clear stored credentials: `doc2x logout`
+   - Token storage:
+     - macOS: `~/Library/Application Support/doc2x/cli-oauth-tokens.json`
+     - Windows: `%APPDATA%/doc2x/cli-oauth-tokens.json`
+     - Linux: `~/.config/doc2x/cli-oauth-tokens.json`
 
 ### Input File Issues
 
@@ -102,8 +107,8 @@
 
 20. **"Task limit exceeded" / concurrent task limit error**
     - Doc2X enforces a server-side limit on concurrent tasks per account.
-    - **Cause**: Running multiple `doc2x` commands in parallel, or using `--concurrency` > 1 in batch mode.
-    - **Fix**: Always run doc2x commands sequentially — one at a time. For batch commands, keep `--concurrency 1` (the default). Never launch multiple doc2x processes in parallel.
+    - **Cause**: Running multiple `doc2x` commands in parallel.
+    - **Fix**: Always run doc2x commands sequentially — one at a time. Batch mode already enforces sequential execution (concurrency hardcoded to 1). Never launch multiple doc2x processes in parallel.
 
 ## Debugging Tips
 
