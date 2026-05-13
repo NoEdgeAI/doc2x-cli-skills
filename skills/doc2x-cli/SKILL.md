@@ -4,12 +4,12 @@ description: "Installs and operates @noedgeai/doc2x-cli for document parsing, tr
 license: MIT
 metadata:
   author: noedgeai
-  version: "0.1.2"
+  version: "0.1.4"
 ---
 
 # Doc2X CLI
 
-CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and translating documents to 10 languages with bilingual output.
+CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and translating documents to 11 languages with bilingual output.
 
 **IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). Batch commands always run sequentially (concurrency is hardcoded to 1). Violating this causes "task limit exceeded" errors.
 
@@ -156,7 +156,7 @@ doc2x translate ./paper.pdf --ignore-translate-types table code      # Skip tabl
 doc2x translate ./paper.pdf --contextual-translation                 # Enhanced context
 ```
 
-Languages: `zh en ja fr ru pt es de ko ar`. Fixed-layout PDF (`--translate-type pdf`) always exports as `.pdf` regardless of `--name`.
+Languages: `zh en ja fr ru pt pt-BR es de ko ar`. Fixed-layout PDF (`--translate-type pdf`) always exports as `.pdf` regardless of `--name`.
 
 ### batch
 
@@ -236,7 +236,7 @@ Priority: CLI flags > config > built-in defaults. Load `references/config-and-au
 
 ## Troubleshooting
 
-Load `references/troubleshooting.md` for the full list (19 error scenarios with exact messages).
+Load `references/troubleshooting.md` for the full list (20 error scenarios with exact messages).
 
 Common issues:
 - `command not found` → `npm config get prefix`, add `<prefix>/bin` to PATH
