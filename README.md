@@ -46,14 +46,20 @@ cp -r skills/doc2x-cli .agents/skills/doc2x-cli
 
 ### 验证
 
-在 Claude Code 中输入 `/doc2x-cli`，应能在自动补全中看到该技能。
+- 确认目标目录中存在 `doc2x-cli/SKILL.md`。
+- 在对话中提到 `doc2x-cli`、`Doc2X`、`PDF to Markdown`、批量处理等关键词，Agent 应能自动加载该技能。
+
+> 技能安装不会创建自定义斜杠命令；不要用 `/doc2x-cli` 验证。斜杠命令属于单独的 commands 机制，不由本仓库安装。
 
 ## 使用
 
+直接用自然语言说明需求即可：
+
 ```
-/doc2x-cli
-/doc2x-cli 如何将 PDF 解析为 Markdown
-/doc2x-cli 批量处理配置
+使用 doc2x-cli 技能
+doc2x-cli 如何将 PDF 解析为 Markdown
+用 Doc2X 批量处理 ./docs 目录下的 PDF
+将 paper.pdf 转成 Markdown
 ```
 
 ## 包含内容

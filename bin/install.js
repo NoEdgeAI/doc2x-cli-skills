@@ -29,4 +29,4 @@ cpSync(skillSrc, targetDir, { recursive: true });
 
 const scope = isProject ? "project" : "personal";
 console.log(`doc2x-cli skill installed (${scope}): ${targetDir}`);
-console.log('Verify: type "/doc2x-cli" in Claude Code.');
+console.log('Verify: ask Claude Code to use the doc2x-cli skill. This installer does not create a slash command.');
