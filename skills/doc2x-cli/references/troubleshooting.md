@@ -65,7 +65,7 @@
       - `--formula-mode`: normal, dollar
       - `--formula-level`: normal, onlyLine, processAll
       - `--translate-type`: md, pdf
-      - `--target-language`: zh, en, ja, fr, ru, pt, es, de, ko, ar
+      - `--target-language`: zh, en, ja, fr, ru, pt, pt-BR, es, de, ko, ar
       - `--convert-trans`: both, origin, translate
       - `--ignore-translate-types`: table, code, figure, reference
 

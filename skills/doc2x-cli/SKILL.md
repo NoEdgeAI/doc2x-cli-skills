@@ -4,14 +4,16 @@ description: "Installs and operates @noedgeai/doc2x-cli for document parsing, tr
 license: MIT
 metadata:
   author: noedgeai
-  version: "0.1.2"
+  version: "0.1.4"
 ---
 
 # Doc2X CLI
 
-CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and translating documents to 10 languages with bilingual output.
+CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and translating documents to 11 languages with bilingual output.
 
 **IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). Batch commands always run sequentially (concurrency is hardcoded to 1). Violating this causes "task limit exceeded" errors.
+
+**IMPORTANT — Stable versions only:** NEVER install or use beta, alpha, rc, or any pre-release versions of `@noedgeai/doc2x-cli`. Always use the `@latest` tag explicitly when installing or updating. If `npm outdated` or `npm view` shows a pre-release version (e.g., `1.2.0-beta.1`), ignore it and stick with the latest stable release.
 
 $ARGUMENTS
 
@@ -32,16 +34,60 @@ $ARGUMENTS
 | Login (OAuth) | `doc2x login` |
 | Logout | `doc2x logout` |
 
-## Install
+## Preflight — run once before first doc2x command
+
+**You MUST perform these checks at the start of every conversation before running any doc2x command.** Do not skip this even if the user appears to have doc2x installed.
+
+### 1. Ensure GitHub Packages registry is configured
 
 ```bash
-node --version                    # Must be >= 22
-npm config set @noedgeai:registry=https://npm.pkg.github.com   # Required: point @noedgeai scope to GitHub Packages
-npm i -g @noedgeai/doc2x-cli
-doc2x --help                      # Verify
+npm config get @noedgeai:registry
 ```
 
-**CRITICAL:** Node.js >= 22 is required. The `@noedgeai` scope is hosted on GitHub Packages — you must configure the registry before installing. If `command not found` after install, run `npm config get prefix` and add `<prefix>/bin` to PATH.
+If the output is `undefined` or does not contain `npm.pkg.github.com`, configure it:
+
+```bash
+npm config set @noedgeai:registry=https://npm.pkg.github.com
+```
+
+This is a **required one-time prerequisite** — without it, install and update commands will fail with 404.
+
+### 2. Check if doc2x CLI is installed
+
+```bash
+doc2x --version
+```
+
+- **"command not found"** → CLI is not installed. Go to step 3.
+- **Version number shown** → CLI is installed. Go to step 4.
+
+### 3. Install (if not installed)
+
+```bash
+node --version                    # Must be >= 22; tell user to upgrade first if lower
+npm i -g @noedgeai/doc2x-cli@latest
+doc2x --help                      # Verify installation
+```
+
+If `command not found` after install: run `npm config get prefix` and tell the user to add `<prefix>/bin` to their PATH.
+
+After successful install, proceed to the user's request — skip step 4.
+
+### 4. Check for updates (if already installed)
+
+```bash
+npm view @noedgeai/doc2x-cli dist-tags.latest
+```
+
+Compare the output with the currently installed version. If a newer stable version is available, update:
+
+```bash
+npm i -g @noedgeai/doc2x-cli@latest
+```
+
+**CRITICAL:** Always use `dist-tags.latest` to find the stable version. NEVER use `npm outdated` (it may resolve to beta/pre-release versions). NEVER install a version containing `-beta`, `-alpha`, `-rc`, or any pre-release suffix.
+
+Inform the user of the version change before proceeding.
 
 ## Authentication
 
@@ -114,7 +160,7 @@ doc2x translate ./paper.pdf --ignore-translate-types table code      # Skip tabl
 doc2x translate ./paper.pdf --contextual-translation                 # Enhanced context
 ```
 
-Languages: `zh en ja fr ru pt es de ko ar`. Fixed-layout PDF (`--translate-type pdf`) always exports as `.pdf` regardless of `--name`.
+Languages: `zh en ja fr ru pt pt-BR es de ko ar`. Fixed-layout PDF (`--translate-type pdf`) always exports as `.pdf` regardless of `--name`.
 
 ### batch
 
@@ -194,7 +240,7 @@ Priority: CLI flags > config > built-in defaults. Load `references/config-and-au
 
 ## Troubleshooting
 
-Load `references/troubleshooting.md` for the full list (19 error scenarios with exact messages).
+Load `references/troubleshooting.md` for the full list (20 error scenarios with exact messages).
 
 Common issues:
 - `command not found` → `npm config get prefix`, add `<prefix>/bin` to PATH

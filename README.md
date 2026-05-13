@@ -4,24 +4,16 @@ Claude Code 技能插件，用于安装、配置和使用 **@noedgeai/doc2x-cli*
 
 ## 安装
 
-### 前置条件
+### 通过 npx 一键安装（推荐）
 
-为 `@noedgeai` 作用域配置 GitHub Packages registry（一次性操作）：
-
-```bash
-npm config set @noedgeai:registry=https://npm.pkg.github.com
-```
-
-> 本包托管在 GitHub Packages 上且公开访问，无需登录或配置 token。
-
-### 通过 npx 一键安装
+直接从 GitHub 拉取，无需配置 registry：
 
 ```bash
 # 安装到个人作用域（所有项目生效）
-npx @noedgeai/doc2x-cli-skills
+npx github:noedgeai/doc2x-cli-skills
 
 # 安装到项目作用域（仅当前项目，可与协作者共享）
-npx @noedgeai/doc2x-cli-skills --project
+npx github:noedgeai/doc2x-cli-skills --project
 ```
 
 脚本会自动将技能文件复制到对应的 `~/.claude/skills/doc2x-cli` 或 `.claude/skills/doc2x-cli` 目录。
@@ -29,27 +21,27 @@ npx @noedgeai/doc2x-cli-skills --project
 ### 手动安装
 
 ```bash
-npm i @noedgeai/doc2x-cli-skills
-```
+git clone https://github.com/noedgeai/doc2x-cli-skills.git
+cd doc2x-cli-skills
 
-然后手动复制技能文件：
-
-```bash
 # 个人作用域
-cp -r node_modules/@noedgeai/doc2x-cli-skills/skills/doc2x-cli ~/.claude/skills/doc2x-cli
+cp -r skills/doc2x-cli ~/.claude/skills/doc2x-cli
 
 # 项目作用域
-cp -r node_modules/@noedgeai/doc2x-cli-skills/skills/doc2x-cli .claude/skills/doc2x-cli
+cp -r skills/doc2x-cli .claude/skills/doc2x-cli
 ```
 
 ### Codex CLI / 其他 Agent
 
 ```bash
+git clone https://github.com/noedgeai/doc2x-cli-skills.git
+cd doc2x-cli-skills
+
 # 用户作用域
-cp -r node_modules/@noedgeai/doc2x-cli-skills/skills/doc2x-cli ~/.agents/skills/doc2x-cli
+cp -r skills/doc2x-cli ~/.agents/skills/doc2x-cli
 
 # 仓库作用域
-cp -r node_modules/@noedgeai/doc2x-cli-skills/skills/doc2x-cli .agents/skills/doc2x-cli
+cp -r skills/doc2x-cli .agents/skills/doc2x-cli
 ```
 
 ### 验证
@@ -68,7 +60,7 @@ cp -r node_modules/@noedgeai/doc2x-cli-skills/skills/doc2x-cli .agents/skills/do
 
 | 技能 | 说明 |
 |------|------|
-| `doc2x-cli` | 将 PDF/图片解析为 Markdown、LaTeX、Word、HTML 或 PDF。支持文档翻译（10 种语言）、目录批量并行处理、翻译术语表管理。 |
+| `doc2x-cli` | 将 PDF/图片解析为 Markdown、LaTeX、Word、HTML 或 PDF。支持文档翻译（10 种语言）、批量处理、翻译术语表管理。 |
 
 ```
 skills/doc2x-cli/
@@ -98,23 +90,10 @@ rm -rf .agents/skills/doc2x-cli      # 仓库作用域
 技能插件本身无运行时依赖。它所服务的 CLI 工具需要：
 
 - Node.js >= 22
-- `@noedgeai/doc2x-cli` —— 通过 `npm i -g @noedgeai/doc2x-cli` 安装
+- `@noedgeai/doc2x-cli` —— 安装前需先配置 registry：`npm config set @noedgeai:registry=https://npm.pkg.github.com`，然后 `npm i -g @noedgeai/doc2x-cli`
 - Doc2X 账号 —— [doc2x.noedgeai.com](https://doc2x.noedgeai.com/)
 
-## 发布（维护者）
-
-本包发布到 GitHub Packages，作用域为 `@noedgeai`。
-
-```bash
-# 登录 GitHub Packages（需要 write:packages 权限的 token）
-npm login --scope=@noedgeai --auth-type=legacy --registry=https://npm.pkg.github.com
-
-# 升版
-npm version patch  # 或 minor / major
-
-# 发布
-npm publish
-```
+> **注意：** 技能插件（本仓库）通过 GitHub 仓库直接安装，无需 registry 配置。但 CLI 工具本身托管在 GitHub Packages，安装时仍需要上述 registry 配置。技能在使用时会自动检查并引导完成这些前置步骤。
 
 ## 相关链接
 

@@ -73,7 +73,7 @@ Inherits all parse options, plus translation-specific options:
 | Option                             | Default  | Description                                               |
 |------------------------------------|----------|-----------------------------------------------------------|
 | `--translate-type <t>`             | `md`     | Translation mode: md (bilingual markdown) or pdf (typeset)|
-| `--target-language <lang>`         | `zh`     | Target: zh, en, ja, fr, ru, pt, es, de, ko, ar           |
+| `--target-language <lang>`         | `zh`     | Target: zh, en, ja, fr, ru, pt, pt-BR, es, de, ko, ar           |
 | `--target-model <id>`              | `72`     | Translation LLM model ID (see `doc2x models list`)       |
 | `--term-id <id>`                   | `""`     | Custom glossary ID for domain-specific terms              |
 | `--font-color-extraction`          | false    | Extract font color information                            |
@@ -220,3 +220,5 @@ These apply to all commands:
 **Environment variables:**
 - `NO_COLOR` — Set to any value to disable ANSI color output
 - `DOC2X_NO_UPDATE_CHECK` — Set to any value to skip update check on startup
+- `CI` — Set to any value to skip update check (auto-detected in CI environments)
+- `CONTINUOUS_INTEGRATION` — Set to any value to skip update check
