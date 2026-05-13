@@ -32,16 +32,58 @@ $ARGUMENTS
 | Login (OAuth) | `doc2x login` |
 | Logout | `doc2x logout` |
 
-## Install
+## Preflight — run once before first doc2x command
+
+**You MUST perform these checks at the start of every conversation before running any doc2x command.** Do not skip this even if the user appears to have doc2x installed.
+
+### 1. Ensure GitHub Packages registry is configured
 
 ```bash
-node --version                    # Must be >= 22
-npm config set @noedgeai:registry=https://npm.pkg.github.com   # Required: point @noedgeai scope to GitHub Packages
-npm i -g @noedgeai/doc2x-cli
-doc2x --help                      # Verify
+npm config get @noedgeai:registry
 ```
 
-**CRITICAL:** Node.js >= 22 is required. The `@noedgeai` scope is hosted on GitHub Packages — you must configure the registry before installing. If `command not found` after install, run `npm config get prefix` and add `<prefix>/bin` to PATH.
+If the output is `undefined` or does not contain `npm.pkg.github.com`, configure it:
+
+```bash
+npm config set @noedgeai:registry=https://npm.pkg.github.com
+```
+
+This is a **required one-time prerequisite** — without it, install and update commands will fail with 404.
+
+### 2. Check if doc2x CLI is installed
+
+```bash
+doc2x --version
+```
+
+- **"command not found"** → CLI is not installed. Go to step 3.
+- **Version number shown** → CLI is installed. Go to step 4.
+
+### 3. Install (if not installed)
+
+```bash
+node --version                    # Must be >= 22; tell user to upgrade first if lower
+npm i -g @noedgeai/doc2x-cli
+doc2x --help                      # Verify installation
+```
+
+If `command not found` after install: run `npm config get prefix` and tell the user to add `<prefix>/bin` to their PATH.
+
+After successful install, proceed to the user's request — skip step 4.
+
+### 4. Check for updates (if already installed)
+
+```bash
+npm outdated -g @noedgeai/doc2x-cli
+```
+
+If the output shows a newer version (Current vs Latest columns differ), update:
+
+```bash
+npm i -g @noedgeai/doc2x-cli@latest
+```
+
+Inform the user of the version change before proceeding. If no output, the CLI is up to date.
 
 ## Authentication
 
