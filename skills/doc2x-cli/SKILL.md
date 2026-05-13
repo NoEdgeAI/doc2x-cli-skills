@@ -13,6 +13,8 @@ CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and 
 
 **IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). Batch commands always run sequentially (concurrency is hardcoded to 1). Violating this causes "task limit exceeded" errors.
 
+**IMPORTANT — Stable versions only:** NEVER install or use beta, alpha, rc, or any pre-release versions of `@noedgeai/doc2x-cli`. Always use the `@latest` tag explicitly when installing or updating. If `npm outdated` or `npm view` shows a pre-release version (e.g., `1.2.0-beta.1`), ignore it and stick with the latest stable release.
+
 $ARGUMENTS
 
 ## Quick Reference
@@ -63,7 +65,7 @@ doc2x --version
 
 ```bash
 node --version                    # Must be >= 22; tell user to upgrade first if lower
-npm i -g @noedgeai/doc2x-cli
+npm i -g @noedgeai/doc2x-cli@latest
 doc2x --help                      # Verify installation
 ```
 
@@ -74,16 +76,18 @@ After successful install, proceed to the user's request — skip step 4.
 ### 4. Check for updates (if already installed)
 
 ```bash
-npm outdated -g @noedgeai/doc2x-cli
+npm view @noedgeai/doc2x-cli dist-tags.latest
 ```
 
-If the output shows a newer version (Current vs Latest columns differ), update:
+Compare the output with the currently installed version. If a newer stable version is available, update:
 
 ```bash
 npm i -g @noedgeai/doc2x-cli@latest
 ```
 
-Inform the user of the version change before proceeding. If no output, the CLI is up to date.
+**CRITICAL:** Always use `dist-tags.latest` to find the stable version. NEVER use `npm outdated` (it may resolve to beta/pre-release versions). NEVER install a version containing `-beta`, `-alpha`, `-rc`, or any pre-release suffix.
+
+Inform the user of the version change before proceeding.
 
 ## Authentication
 
