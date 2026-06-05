@@ -161,7 +161,7 @@ doc2x translate ./paper.pdf --ignore-translate-types table code      # Skip tabl
 doc2x translate ./paper.pdf --contextual-translation                 # Enhanced context
 ```
 
-Languages: `zh en ja fr ru pt pt-BR es de ko ar`. Fixed-layout PDF (`--translate-type pdf`) always exports as `.pdf` regardless of `--name`; use `--pdf-font-strategy global-consistent|page-optimal` to control font strategy. Do not suggest a `combinedTranslate` or combined-output CLI flag; it is not exposed by the CLI in the current stable release.
+Languages: `zh en ja fr ru pt pt-BR es de ko ar`. Fixed-layout PDF (`--translate-type pdf`) always exports as `.pdf` regardless of `--name`; use one `--pdf-font-strategy <strategy>` argument with either `global-consistent` (default, global consistency) or `page-optimal` (single-page priority). Do not suggest a `combinedTranslate` or combined-output CLI flag; it is not exposed by the CLI in the current stable release.
 
 ### batch
 

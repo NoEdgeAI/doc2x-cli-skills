@@ -79,14 +79,14 @@ Inherits all parse options, plus translation-specific options:
 | `--target-model <id>`              | `72`     | Translation LLM model ID (see `doc2x models list`)       |
 | `--term-id <id>`                   | `""`     | Custom glossary ID for domain-specific terms              |
 | `--font-color-extraction`          | false    | Extract font color information                            |
-| `--pdf-font-strategy <strategy>`   | `global-consistent` | Fixed-layout PDF translation font strategy: global-consistent or page-optimal |
+| `--pdf-font-strategy <strategy>`   | `global-consistent` | Fixed-layout PDF translation font strategy: global-consistent (global consistency) or page-optimal (single-page priority) |
 | `--convert-trans <t>`              | `both`   | Export content: both, origin, or translate                 |
 | `--contextual-translation`         | false    | Enable contextual translation enhancement                 |
 | `--ignore-translate-types <t...>`  | `[]`     | Skip element types: table, code, figure, reference        |
 
 **Translation pipeline:** upload → parse → translate → export
 
-**Fixed-layout PDF translation** (`--translate-type pdf`): The exported file always uses `.pdf` extension, regardless of the `--name` pattern. `--pdf-font-strategy` applies only in this mode. Do not suggest `combinedTranslate` or a combined-output CLI flag; the CLI does not expose one in the current stable release.
+**Fixed-layout PDF translation** (`--translate-type pdf`): The exported file always uses `.pdf` extension, regardless of the `--name` pattern. `--pdf-font-strategy` is one option with two valid values: `global-consistent` keeps font choices consistent across the document, while `page-optimal` prioritizes each page's local layout/font fit. Do not suggest `combinedTranslate` or a combined-output CLI flag; the CLI does not expose one in the current stable release.
 
 ---
 

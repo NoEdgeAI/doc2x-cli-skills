@@ -67,7 +67,7 @@
       - `--docx-template`: default, general, academic, business, elegant, minimal, technical
       - `--translate-type`: md, pdf
       - `--target-language`: zh, en, ja, fr, ru, pt, pt-BR, es, de, ko, ar
-      - `--pdf-font-strategy`: global-consistent, page-optimal
+      - `--pdf-font-strategy`: global-consistent (global consistency), page-optimal (single-page priority)
       - `--convert-trans`: both, origin, translate
       - `--ignore-translate-types`: table, code, figure, reference
 
