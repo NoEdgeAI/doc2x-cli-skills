@@ -60,7 +60,7 @@ cp -r skills/doc2x-cli .agents/skills/doc2x-cli
 
 | 技能 | 说明 |
 |------|------|
-| `doc2x-cli` | 将 PDF/图片解析为 Markdown、LaTeX、Word、HTML 或 PDF。支持文档翻译（10 种语言）、批量处理、翻译术语表管理。 |
+| `doc2x-cli` | 将 PDF/图片解析为 Markdown、LaTeX、Word、HTML 或 PDF。支持文档翻译（11 种语言）、批量处理、翻译术语表管理。 |
 
 ```
 skills/doc2x-cli/
