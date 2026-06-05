@@ -22,11 +22,11 @@ $ARGUMENTS
 | Task | Command |
 |------|---------|
 | Parse PDF → Markdown | `doc2x parse ./paper.pdf` |
-| Parse PDF → Word | `doc2x parse ./paper.pdf --to docx` |
+| Parse PDF → Word | `doc2x parse ./paper.pdf --to docx --docx-template academic` |
 | Parse image → Markdown | `doc2x parse ./scan.png --to md` |
 | Translate → Chinese | `doc2x translate ./paper.pdf` |
 | Translate → English HTML | `doc2x translate ./paper.pdf --target-language en --to html` |
-| Bilingual PDF | `doc2x translate ./paper.pdf --translate-type pdf --target-language en` |
+| Bilingual PDF | `doc2x translate ./paper.pdf --translate-type pdf --target-language en --pdf-font-strategy page-optimal` |
 | Batch parse | `doc2x batch parse ./docs` |
 | Batch translate | `doc2x batch translate ./docs --glob "**/*.pdf" --target-language en` |
 | List models | `doc2x models list` |
@@ -128,7 +128,7 @@ Converts PDF or image to another format. Supported inputs: PDF (≤300 MB), PNG/
 
 ```bash
 doc2x parse ./paper.pdf                                # → Markdown (default)
-doc2x parse ./paper.pdf --to docx --out ./results      # → Word
+doc2x parse ./paper.pdf --to docx --docx-template academic --out ./results # → Word
 doc2x parse ./paper.pdf --to tex                        # → LaTeX
 doc2x parse ./paper.pdf --to html                       # → HTML (client-rendered with MathJax)
 doc2x parse ./paper.pdf --to pdf                        # → Re-typeset PDF
@@ -138,7 +138,7 @@ doc2x parse ./paper.pdf --image-models doc2x mathpix   # With Mathpix (subscript
 doc2x parse ./paper.pdf --name "{basename}-{date}"      # Custom filename
 ```
 
-**IMPORTANT:** `--formula-mode dollar` only works with `--to md`. `--image-hosting online` stores images for only 30 days. `doc2x` in `--image-models` is mandatory and cannot be removed.
+**IMPORTANT:** `--formula-mode dollar` only works with `--to md`. `--image-hosting online` stores images for only 30 days. `doc2x` in `--image-models` is mandatory and cannot be removed. `--docx-template` applies to V3 Word exports (`--to docx`) only. Values: `default`, `general`, `academic`, `business`, `elegant`, `minimal`, `technical`.
 
 Load `references/command-reference.md` for the full option table.
 
@@ -153,14 +153,15 @@ Inherits all parse options. Adds translation to bilingual Markdown or typeset PD
 ```bash
 doc2x translate ./paper.pdf                                          # → Chinese (default)
 doc2x translate ./paper.pdf --target-language en --to html           # → English HTML
-doc2x translate ./paper.pdf --translate-type pdf --target-language en # → Bilingual PDF
+doc2x translate ./paper.pdf --translate-type pdf --target-language en --pdf-font-strategy page-optimal # → Bilingual PDF
+doc2x translate ./paper.pdf --target-language en --to docx --docx-template technical # → Translated Word
 doc2x translate ./paper.pdf --target-language en --term-id glossary1 # With glossary
 doc2x translate ./paper.pdf --target-language ja --convert-trans translate  # Translation only
 doc2x translate ./paper.pdf --ignore-translate-types table code      # Skip tables/code
 doc2x translate ./paper.pdf --contextual-translation                 # Enhanced context
 ```
 
-Languages: `zh en ja fr ru pt pt-BR es de ko ar`. Fixed-layout PDF (`--translate-type pdf`) always exports as `.pdf` regardless of `--name`.
+Languages: `zh en ja fr ru pt pt-BR es de ko ar`. Fixed-layout PDF (`--translate-type pdf`) always exports as `.pdf` regardless of `--name`; use `--pdf-font-strategy global-consistent|page-optimal` to control font strategy. Do not suggest a `combinedTranslate` or combined-output CLI flag; it is not exposed by the CLI in the current stable release.
 
 ### batch
 

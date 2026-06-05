@@ -40,12 +40,14 @@ doc2x parse <input> [options]
 | `--merge-cross-page-forms`         | false        | Merge tables spanning multiple pages                      |
 | `--remove-comments`                | false        | Remove HTML comments from output                          |
 | `--avoid-indented-code-blocks`     | false        | Code indentation compatibility mode                       |
+| `--docx-template <template>`       | `default`    | Word template for V3 docx export: default, general, academic, business, elegant, minimal, technical |
 
 **Warnings:**
 - `--formula-mode dollar` is only effective when `--to md`. Using it with other formats logs a warning.
 - `--image-hosting online` stores images for only 30 days.
 - `--image-models` always requires `doc2x`; it cannot be removed. Adding `mathpix` requires a subscription.
 - `--vision-models` accepts model IDs or names from `doc2x models list`. Some may require a subscription.
+- `--docx-template` is sent only for V3 Word exports (`--to docx`) from parse or translate commands. It has no effect on Markdown, LaTeX, HTML, PDF, or `none` exports.
 
 **Filename template variables:**
 - `{basename}` — Original filename without extension
@@ -77,13 +79,14 @@ Inherits all parse options, plus translation-specific options:
 | `--target-model <id>`              | `72`     | Translation LLM model ID (see `doc2x models list`)       |
 | `--term-id <id>`                   | `""`     | Custom glossary ID for domain-specific terms              |
 | `--font-color-extraction`          | false    | Extract font color information                            |
+| `--pdf-font-strategy <strategy>`   | `global-consistent` | Fixed-layout PDF translation font strategy: global-consistent or page-optimal |
 | `--convert-trans <t>`              | `both`   | Export content: both, origin, or translate                 |
 | `--contextual-translation`         | false    | Enable contextual translation enhancement                 |
 | `--ignore-translate-types <t...>`  | `[]`     | Skip element types: table, code, figure, reference        |
 
 **Translation pipeline:** upload → parse → translate → export
 
-**Fixed-layout PDF translation** (`--translate-type pdf`): The exported file always uses `.pdf` extension, regardless of the `--name` pattern.
+**Fixed-layout PDF translation** (`--translate-type pdf`): The exported file always uses `.pdf` extension, regardless of the `--name` pattern. `--pdf-font-strategy` applies only in this mode. Do not suggest `combinedTranslate` or a combined-output CLI flag; the CLI does not expose one in the current stable release.
 
 ---
 
@@ -108,6 +111,8 @@ Inherits all parse and translate options. Batch-specific options:
 | `--dry-run`             | false                         | List matched files without processing       |
 
 **Note:** Batch always runs sequentially (concurrency hardcoded to 1). Running multiple `doc2x` commands in parallel will trigger "task limit exceeded" errors.
+
+Batch inherits parse and translate options, including `--docx-template` for Word exports and `--pdf-font-strategy` for fixed-layout PDF translation.
 
 **Validation:**
 - `<action>` must be `parse` or `translate` — otherwise: `Invalid batch action: "<value>". Use "parse" or "translate".`

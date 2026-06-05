@@ -64,8 +64,10 @@
       - `--image-hosting`: local, online
       - `--formula-mode`: normal, dollar
       - `--formula-level`: normal, onlyLine, processAll
+      - `--docx-template`: default, general, academic, business, elegant, minimal, technical
       - `--translate-type`: md, pdf
       - `--target-language`: zh, en, ja, fr, ru, pt, pt-BR, es, de, ko, ar
+      - `--pdf-font-strategy`: global-consistent, page-optimal
       - `--convert-trans`: both, origin, translate
       - `--ignore-translate-types`: table, code, figure, reference
 
