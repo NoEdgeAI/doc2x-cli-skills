@@ -63,6 +63,7 @@ defaults:
     mergeCrossPageForms: false
     removeComments: false
     avoidIndentedCodeBlocks: false
+    docxTemplate: default
     name: "{basename}"
     overwrite: false
   translate:
@@ -71,6 +72,7 @@ defaults:
     targetModel: "72"
     termId: ""
     fontColorExtraction: false
+    pdfFontStrategy: global-consistent
     ignoreTranslateTypes: []
     convertTrans: both
     contextualTranslation: false
@@ -90,6 +92,10 @@ doc2x batch translate ./docs --config ./doc2x.config.yaml
 ```
 
 **Option priority** (highest to lowest): CLI flags → config file defaults → built-in defaults.
+
+Config option values:
+- `docxTemplate`: `default`, `general`, `academic`, `business`, `elegant`, `minimal`, `technical`; V3 Word exports only.
+- `pdfFontStrategy`: `global-consistent` (default) or `page-optimal`; fixed-layout PDF translation only.
 
 **For translate commands**, config resolution merges: CLI args → global config → config.defaults.parse → config.defaults.translate → built-in defaults.
 
