@@ -93,7 +93,9 @@ doc2x batch translate ./docs --config ./doc2x.config.yaml
 
 **Option priority** (highest to lowest): CLI flags → config file defaults → built-in defaults.
 
-`docxTemplate` values: `default`, `general`, `academic`, `business`, `elegant`, `minimal`, `technical`; it applies only to V3 Word exports (`--to docx`). `pdfFontStrategy` values: `global-consistent` (global consistency) or `page-optimal` (single-page priority); it applies only to fixed-layout PDF translation (`translateType: pdf`).
+Config option values:
+- `docxTemplate`: `default`, `general`, `academic`, `business`, `elegant`, `minimal`, `technical`; V3 Word exports only.
+- `pdfFontStrategy`: `global-consistent` (default) or `page-optimal`; fixed-layout PDF translation only.
 
 **For translate commands**, config resolution merges: CLI args → global config → config.defaults.parse → config.defaults.translate → built-in defaults.
 

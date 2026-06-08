@@ -79,14 +79,16 @@ Inherits all parse options, plus translation-specific options:
 | `--target-model <id>`              | `72`     | Translation LLM model ID (see `doc2x models list`)       |
 | `--term-id <id>`                   | `""`     | Custom glossary ID for domain-specific terms              |
 | `--font-color-extraction`          | false    | Extract font color information                            |
-| `--pdf-font-strategy <strategy>`   | `global-consistent` | Fixed-layout PDF translation font strategy: global-consistent (global consistency) or page-optimal (single-page priority) |
+| `--pdf-font-strategy <strategy>`   | `global-consistent` | Fixed-layout PDF font strategy: global-consistent, page-optimal |
 | `--convert-trans <t>`              | `both`   | Export content: both, origin, or translate                 |
 | `--contextual-translation`         | false    | Enable contextual translation enhancement                 |
 | `--ignore-translate-types <t...>`  | `[]`     | Skip element types: table, code, figure, reference        |
 
 **Translation pipeline:** upload → parse → translate → export
 
-**Fixed-layout PDF translation** (`--translate-type pdf`): The exported file always uses `.pdf` extension, regardless of the `--name` pattern. `--pdf-font-strategy` is one option with two valid values: `global-consistent` keeps font choices consistent across the document, while `page-optimal` prioritizes each page's local layout/font fit. Do not suggest `combinedTranslate` or a combined-output CLI flag; the CLI does not expose one in the current stable release.
+**Fixed-layout PDF translation** (`--translate-type pdf`): Always exports `.pdf`. `--pdf-font-strategy` accepts `global-consistent` (default) or `page-optimal`.
+
+**Unavailable flags:** Do not suggest `combinedTranslate` or combined-output CLI flags; the current stable CLI does not expose them.
 
 ---
 
@@ -201,7 +203,7 @@ transformer,变换器,en,zh
 ```
 
 - Header row auto-detected if it contains "origin" or "translate" (case-insensitive)
-- Language codes: zh, en, ja, fr, ru, pt, es, de, ko, ar
+- Language codes: zh, en, ja, fr, ru, pt, pt-BR, es, de, ko, ar
 - Default language pair: English origin → Chinese translation (if columns omitted)
 - Empty lines are filtered out; at least one valid entry is required
 

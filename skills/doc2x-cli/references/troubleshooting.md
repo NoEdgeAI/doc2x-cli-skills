@@ -70,7 +70,6 @@
       - `--pdf-font-strategy`: global-consistent (global consistency), page-optimal (single-page priority)
       - `--convert-trans`: both, origin, translate
       - `--ignore-translate-types`: table, code, figure, reference
-
 12. **"Invalid batch action: "<value>". Use "parse" or "translate"."** (exit code 1)
     - The batch action must be exactly `parse` or `translate`.
 

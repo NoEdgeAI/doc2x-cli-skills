@@ -128,7 +128,7 @@ Converts PDF or image to another format. Supported inputs: PDF (≤300 MB), PNG/
 
 ```bash
 doc2x parse ./paper.pdf                                # → Markdown (default)
-doc2x parse ./paper.pdf --to docx --docx-template academic --out ./results # → Word
+doc2x parse ./paper.pdf --to docx --docx-template academic # → Word
 doc2x parse ./paper.pdf --to tex                        # → LaTeX
 doc2x parse ./paper.pdf --to html                       # → HTML (client-rendered with MathJax)
 doc2x parse ./paper.pdf --to pdf                        # → Re-typeset PDF
@@ -161,7 +161,11 @@ doc2x translate ./paper.pdf --ignore-translate-types table code      # Skip tabl
 doc2x translate ./paper.pdf --contextual-translation                 # Enhanced context
 ```
 
-Languages: `zh en ja fr ru pt pt-BR es de ko ar`. Fixed-layout PDF (`--translate-type pdf`) always exports as `.pdf` regardless of `--name`; use one `--pdf-font-strategy <strategy>` argument with either `global-consistent` (default, global consistency) or `page-optimal` (single-page priority). Do not suggest a `combinedTranslate` or combined-output CLI flag; it is not exposed by the CLI in the current stable release.
+Languages: `zh en ja fr ru pt pt-BR es de ko ar`.
+
+Fixed-layout PDF (`--translate-type pdf`) always exports `.pdf`. `--pdf-font-strategy`: `global-consistent` (default) or `page-optimal`.
+
+Do not suggest `combinedTranslate` or combined-output CLI flags; the current stable CLI does not expose them.
 
 ### batch
 
