@@ -1,5 +1,14 @@
 # Doc2X CLI — Configuration & Authentication Reference
 
+## Installation
+
+Install or update the CLI:
+
+```bash
+npm view @noedgeai-org/doc2x-cli dist-tags.latest
+npm i -g @noedgeai-org/doc2x-cli@latest
+```
+
 ## Authentication Modes
 
 ### Client Mode (`--auth-mode client`, default)
