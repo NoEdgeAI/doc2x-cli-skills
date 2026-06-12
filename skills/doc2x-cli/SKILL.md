@@ -1,10 +1,10 @@
 ---
 name: doc2x-cli
-description: "Installs and operates @noedgeai/doc2x-cli for document parsing, translation, and batch processing. Trigger when user mentions doc2x, doc2x-cli, PDF to Markdown, PDF OCR, document translation, batch PDF conversion, or bilingual PDF. Covers parse, translate, batch, login, logout, models, and term commands. Do NOT trigger for general PDF viewing, browser-based PDF tools, or non-doc2x workflows."
+description: "Installs and operates @noedgeai-org/doc2x-cli for document parsing, translation, and batch processing. Trigger when user mentions doc2x, doc2x-cli, PDF to Markdown, PDF OCR, document translation, batch PDF conversion, or bilingual PDF. Covers install, update, parse, translate, batch, login, logout, models, and term commands. Do NOT trigger for general PDF viewing, browser-based PDF tools, or non-doc2x workflows."
 license: MIT
 metadata:
   author: noedgeai
-  version: "0.1.4"
+  version: "0.1.5"
 ---
 
 # Doc2X CLI
@@ -13,7 +13,7 @@ CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and 
 
 **IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). Batch commands always run sequentially (concurrency is hardcoded to 1). Violating this causes "task limit exceeded" errors.
 
-**IMPORTANT — Stable versions only:** NEVER install or use beta, alpha, rc, or any pre-release versions of `@noedgeai/doc2x-cli`. Always use the `@latest` tag explicitly when installing or updating. If `npm outdated` or `npm view` shows a pre-release version (e.g., `1.2.0-beta.1`), ignore it and stick with the latest stable release.
+**IMPORTANT — Stable versions only:** NEVER install or use beta, alpha, rc, or any pre-release versions of `@noedgeai-org/doc2x-cli`. Always use the `@latest` tag explicitly when installing or updating. If `npm outdated` or `npm view` shows a pre-release version (e.g., `1.2.0-beta.1`), ignore it and stick with the latest stable release.
 
 $ARGUMENTS
 
@@ -38,19 +38,13 @@ $ARGUMENTS
 
 **You MUST perform these checks at the start of every conversation before running any doc2x command.** Do not skip this even if the user appears to have doc2x installed.
 
-### 1. Ensure GitHub Packages registry is configured
+### 1. Check Node.js version
 
 ```bash
-npm config get @noedgeai:registry
+node --version
 ```
 
-If the output is `undefined` or does not contain `npm.pkg.github.com`, configure it:
-
-```bash
-npm config set @noedgeai:registry=https://npm.pkg.github.com
-```
-
-This is a **required one-time prerequisite** — without it, install and update commands will fail with 404.
+Node.js must be >= 22. Tell the user to upgrade first if it is lower.
 
 ### 2. Check if doc2x CLI is installed
 
@@ -64,9 +58,8 @@ doc2x --version
 ### 3. Install (if not installed)
 
 ```bash
-node --version                    # Must be >= 22; tell user to upgrade first if lower
-npm i -g @noedgeai/doc2x-cli@latest
-doc2x --help                      # Verify installation
+npm i -g @noedgeai-org/doc2x-cli@latest
+doc2x --help
 ```
 
 If `command not found` after install: run `npm config get prefix` and tell the user to add `<prefix>/bin` to their PATH.
@@ -76,13 +69,13 @@ After successful install, proceed to the user's request — skip step 4.
 ### 4. Check for updates (if already installed)
 
 ```bash
-npm view @noedgeai/doc2x-cli dist-tags.latest
+npm view @noedgeai-org/doc2x-cli dist-tags.latest
 ```
 
 Compare the output with the currently installed version. If a newer stable version is available, update:
 
 ```bash
-npm i -g @noedgeai/doc2x-cli@latest
+npm i -g @noedgeai-org/doc2x-cli@latest
 ```
 
 **CRITICAL:** Always use `dist-tags.latest` to find the stable version. NEVER use `npm outdated` (it may resolve to beta/pre-release versions). NEVER install a version containing `-beta`, `-alpha`, `-rc`, or any pre-release suffix.
@@ -245,10 +238,11 @@ Priority: CLI flags > config > built-in defaults. Load `references/config-and-au
 
 ## Troubleshooting
 
-Load `references/troubleshooting.md` for the full list (20 error scenarios with exact messages).
+Load `references/troubleshooting.md` for the full list (21 error scenarios with exact messages).
 
 Common issues:
 - `command not found` → `npm config get prefix`, add `<prefix>/bin` to PATH
+- Install/update failure → retry with `npm i -g @noedgeai-org/doc2x-cli@latest --registry=https://registry.npmjs.org`
 - Auth failure (client) → desktop app must be running and logged in
 - Auth failure (OAuth) → run `doc2x login` to re-authenticate via browser
 - `Unsupported image format` → convert WebP/TIFF to PNG first
