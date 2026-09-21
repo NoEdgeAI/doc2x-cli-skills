@@ -1,5 +1,7 @@
 # Doc2X CLI — Complete Command Reference
 
+Verified against npm `@noedgeai-org/doc2x-cli@0.1.9` on 2026-09-21. These are CLI capabilities, not a mirror of the website's format menu.
+
 ## Parse Command
 
 ```bash
@@ -11,7 +13,7 @@ doc2x parse <input> [options]
 **Supported input formats:**
 - PDF files (up to 300 MB)
 - Images: PNG, JPG, JPEG, GIF, BMP (up to 3 MB each)
-- NOT supported: WebP, TIFF (rejected with suggestion to convert to PNG)
+- NOT supported by this CLI: WebP, TIFF (convert to PNG first), DOC/DOCX, PPT/PPTX (convert to PDF first)
 - Empty files are rejected
 
 **Output formats** (`--to`):
@@ -74,19 +76,38 @@ Inherits all parse options, plus translation-specific options:
 
 | Option                             | Default  | Description                                               |
 |------------------------------------|----------|-----------------------------------------------------------|
-| `--translate-type <t>`             | `md`     | Translation mode: md (bilingual markdown) or pdf (typeset)|
+| `--translate-type <t>`             | `md`     | Translation mode: md (reflowed bilingual content) or pdf (preserved layout)|
 | `--target-language <lang>`         | `zh`     | Target: zh, en, ja, fr, ru, pt, pt-BR, es, de, ko, ar           |
-| `--target-model <id>`              | `72`     | Translation LLM model ID (see `doc2x models list`)       |
+| `--target-model <id>`              | `10001`  | Free translation model; use `doc2x models list` for available IDs/names |
 | `--term-id <id>`                   | `""`     | Custom glossary ID for domain-specific terms              |
 | `--font-color-extraction`          | false    | Extract font color information                            |
 | `--pdf-font-strategy <strategy>`   | `global-consistent` | Fixed-layout PDF font strategy: global-consistent, page-optimal |
-| `--convert-trans <t>`              | `both`   | Export content: both, origin, or translate                 |
+| `--convert-trans <t>`              | `both`   | Reflowed exports only: both, origin, or translate; ignored by fixed-layout PDF export |
 | `--contextual-translation`         | false    | Enable contextual translation enhancement                 |
 | `--ignore-translate-types <t...>`  | `[]`     | Skip element types: table, code, figure, reference        |
 
 **Translation pipeline:** upload → parse → translate → export
 
-**Fixed-layout PDF translation** (`--translate-type pdf`): Always exports `.pdf`. `--pdf-font-strategy` accepts `global-consistent` (default) or `page-optimal`.
+### Translation and export modes
+
+| User's goal | CLI selection | Actual output |
+|-------------|---------------|---------------|
+| Preserve the source page layout | `--translate-type pdf` | Side-by-side bilingual PDF: original left, translation right |
+| Bilingual editable content | `--translate-type md --convert-trans both --to docx` | Reflowed Word with original and translation |
+| Translation-only content | `--translate-type md --convert-trans translate --to md` | Translation-only Markdown; `docx`/`html` are also available |
+| Ordinary parsed PDF export | `parse file.pdf --to pdf` | Re-typeset PDF; this is not preserved-layout translation |
+
+**Fixed-layout PDF translation** always exports `.pdf` when an export is requested (`--to none` skips export). `--pdf-font-strategy` accepts `global-consistent` (default) or `page-optimal`. Stable 0.1.9 calls the combined fixed-layout export with `reverseOrder: false`; the verified output places original and translation side by side on each output page. It does not pass `--convert-trans` to that export and has no CLI option to switch to translation-only, reverse-order, or above/below output. Do not invent flags for those modes.
+
+```bash
+# No desktop client needed after OAuth login
+doc2x translate ./paper.pdf --auth-mode oauth --translate-type pdf --target-language zh --pdf-font-strategy page-optimal --out ./output
+
+# Editable translation, with reflowed layout
+doc2x translate ./paper.pdf --auth-mode oauth --translate-type md --convert-trans translate --to docx --docx-template technical --out ./output
+```
+
+Preserved-layout Word/WPS, MathType-specific Word, EduEditor, Typst, Excel table export, scanned-PDF text layers, and the image translation editing canvas are website features with no equivalent flags in this stable CLI. `--to docx` and `--docx-template` select reflowed Word; they do not activate those website export modes. The CLI's image OCR path is not the website's image translation editor.
 
 **Unavailable flags:** Do not suggest `combinedTranslate` or combined-output CLI flags; the current stable CLI does not expose them.
 
@@ -141,6 +162,8 @@ On success, OAuth credentials are saved to:
 - Linux: `~/.config/doc2x/cli-oauth-tokens.json`
 
 JSON output: `{"ok": true, "expiresAt": <timestamp>}`
+
+Login does not switch the default `client` auth mode. Verify with `doc2x models list --auth-mode oauth`, then pass that flag to task commands or use `authMode: oauth` in a config file. `--no-browser` still requires the browser to reach this machine's `127.0.0.1:<random-port>/callback` within 120 seconds; it is not a remote device-code flow.
 
 ---
 

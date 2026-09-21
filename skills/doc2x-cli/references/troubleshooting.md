@@ -14,7 +14,7 @@
      ```bash
      npm i -g @noedgeai-org/doc2x-cli@latest --registry=https://registry.npmjs.org
      ```
-   - If this still fails, inspect local npm settings with `npm config list`.
+   - If this still fails, inspect the registry setting with `npm config get registry`. Do not paste registry tokens or the contents of credential files into reports.
 
 3. **"404 Not Found" or "npm ERR! code E404" when installing**
    - Check that the package name is exactly `@noedgeai-org/doc2x-cli`.
@@ -40,13 +40,21 @@
 
 6. **OAuth mode failure — not logged in or expired**
    - Run `doc2x login` to authenticate via browser.
-   - OAuth tokens auto-refresh using one-time-use refresh tokens.
+   - Then run `doc2x models list --auth-mode oauth`. Login alone does not switch commands away from the default desktop-client mode.
+   - OAuth tokens auto-refresh when possible.
    - If refresh fails, re-run `doc2x login`.
    - To clear stored credentials: `doc2x logout`
    - Token storage:
      - macOS: `~/Library/Application Support/doc2x/cli-oauth-tokens.json`
      - Windows: `%APPDATA%/doc2x/cli-oauth-tokens.json`
      - Linux: `~/.config/doc2x/cli-oauth-tokens.json`
+
+**Browser authorization fails or never returns to the CLI**
+- For `oauth_invalid_redirect_uri`, update the stable CLI and retry with a newly generated login URL. The production gateway supports the CLI's explicit loopback callback; a self-hosted gateway must also register that callback policy. Do not replace the callback with an arbitrary URL or disable PKCE validation.
+- For `oauth_invalid_pkce`, generate a fresh login URL with the CLI; do not edit or reuse it.
+- Login waits 120 seconds. Keep the CLI process running and complete authorization in that time.
+- `--no-browser` is not a device-code flow. A browser on another computer sends the localhost callback to that other computer. Run login locally or use a trusted loopback tunnel to the CLI's callback port.
+- Report the CLI version, OS, error code, and time. Do not share authorization codes, OAuth URLs containing codes, or token files.
 
 ### Input File Issues
 
@@ -60,7 +68,7 @@
    - The input file has 0 bytes. Check if the file is corrupted.
 
 10. **"Unsupported image format: .webp"** (exit code 3)
-   - WebP and TIFF are not supported by the server.
+   - WebP and TIFF are rejected by this stable CLI; convert to PNG before invoking it. Website format support can differ.
    - Full error: `Unsupported image format: .webp. Server supports: png, jpg, jpeg, gif, bmp. Convert to PNG first: e.g. "convert input.webp output.png"`
 
 ### Validation Issues
@@ -115,6 +123,11 @@
 20. **Export failed** (exit code 5)
     - Download or export failed. May be due to network issues.
     - The CLI retries downloads with exponential backoff (configurable via `--retry`).
+
+**Fixed-layout output differs from the requested format**
+- `--translate-type pdf` exports side-by-side bilingual PDF (original left, translation right) even if `--to docx` or `--convert-trans translate` is supplied. This is the published 0.1.9 export path, not a failed Word conversion.
+- For reflowed translation-only Word, use `--translate-type md --convert-trans translate --to docx`.
+- Preserved-layout Word and the website's specialized export formats are not exposed by this stable CLI. See [translation and export modes](command-reference.md#translation-and-export-modes).
 
 21. **"Task limit exceeded" / concurrent task limit error**
     - Doc2X enforces a server-side limit on concurrent tasks per account.

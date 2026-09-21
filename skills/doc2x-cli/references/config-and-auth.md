@@ -24,7 +24,7 @@ Reuses an authenticated Doc2X desktop client session. The CLI connects to the de
 
 ### OAuth Mode (`--auth-mode oauth`)
 
-Browser-based OAuth 2.0 login with PKCE. Run `doc2x login` to authenticate, then use `--auth-mode oauth` for subsequent commands. Tokens auto-refresh using one-time-use refresh tokens.
+Browser-based OAuth 2.0 login with PKCE. Run `doc2x login` to authenticate, then use `--auth-mode oauth` for subsequent commands. Login does not change the default `client` mode. The CLI handles token refresh; do not edit or share the credential file.
 
 ```bash
 # Step 1: Login via browser (one-time)
@@ -32,7 +32,8 @@ doc2x login
 # Or print URL instead of opening browser:
 doc2x login --no-browser
 
-# Step 2: Use oauth mode
+# Step 2: Verify OAuth access, then use it for tasks
+doc2x models list --auth-mode oauth
 doc2x parse ./file.pdf --auth-mode oauth
 
 # Clear credentials
@@ -48,6 +49,8 @@ doc2x logout
 
 - **Has desktop client installed and logged in** → use client mode (default)
 - **Server/CI environment or no desktop client** → use OAuth mode (`doc2x login` + `--auth-mode oauth`)
+
+The browser must reach the machine running `doc2x login`: the CLI listens on a random `127.0.0.1` port at `/callback`. `--no-browser` prints the URL; it is not a device-code login. Opening a remote server's URL on another computer does not forward the callback. Use a trusted loopback tunnel or log in on the machine with the browser. Never copy credentials into chat.
 
 ---
 
@@ -78,7 +81,7 @@ defaults:
   translate:
     translateType: md
     targetLanguage: zh
-    targetModel: "72"
+    targetModel: "10001"
     termId: ""
     fontColorExtraction: false
     pdfFontStrategy: global-consistent
