@@ -60,7 +60,7 @@ cp -r skills/doc2x-cli .agents/skills/doc2x-cli
 
 ### 无客户端登录与保留排版翻译
 
-以下行为已按 npm 稳定版 `@noedgeai-org/doc2x-cli@0.1.9`（2026-09-21）核对：
+以下行为已按 `@noedgeai-org/doc2x-cli@0.1.11`（2026-09-21）核对：
 
 ```bash
 npm i -g @noedgeai-org/doc2x-cli@latest
@@ -69,9 +69,9 @@ doc2x models list --auth-mode oauth
 doc2x translate ./paper.pdf --auth-mode oauth --translate-type pdf --target-language zh --pdf-font-strategy page-optimal --out ./output
 ```
 
-`login` 不会把默认认证模式从 `client` 改成 `oauth`，后续命令需带 `--auth-mode oauth`，或通过 `--config` 指定 `authMode: oauth`。浏览器应在运行 CLI 的电脑上完成授权；`--no-browser` 只是打印登录地址，仍需回调本机随机端口。
+从 0.1.11 起，默认自动使用 `login` 保存的 CLI 登录，没有 CLI 登录时才使用桌面账号；显式 `--auth-mode client/oauth` 和配置文件选择优先，OAuth 刷新失败不会切到另一账号。0.1.9 仍需带 `--auth-mode oauth`。浏览器应在运行 CLI 的电脑上完成授权；`--no-browser` 只是打印登录地址，仍需回调本机随机端口。
 
-保留排版翻译用 `--translate-type pdf`，导出原文在左、译文在右的双语对照 PDF，保留各自页面排版。当前 CLI 的 `--convert-trans` 不影响这条导出路径，也没有切换左右/上下排布、反转原译文或仅译文 PDF 的选择开关。默认翻译模型为免费模型 `10001`。
+保留排版翻译用 `--translate-type pdf`，默认导出 PDF，原文在左、译文在右，保留各自页面排版。0.1.11 会在上传前拒绝不支持的 `--to docx/md/html/tex` 或 `--convert-trans origin/translate` 组合；0.1.9 会静默忽略这些参数。没有切换左右/上下排布、反转原译文或仅译文 PDF 的开关。默认翻译模型为免费模型 `10001`。
 
 需要可编辑的译文 Word 时，使用 `--translate-type md --convert-trans translate --to docx`，输出会重新排版。网页端的保留排版 Word/WPS、MathType、Typst、表格 Excel 等导出，以及图片翻译编辑，不能直接套用为 CLI 参数。当前 CLI 接收 PDF 和指定图片格式；Word/PPT 输入需先转 PDF。详见[命令参考](skills/doc2x-cli/references/command-reference.md#translation-and-export-modes)。
 

@@ -4,14 +4,14 @@ description: "Installs and operates @noedgeai-org/doc2x-cli for document parsing
 license: MIT
 metadata:
   author: noedgeai
-  version: "0.1.6"
+  version: "0.1.7"
 ---
 
 # Doc2X CLI
 
 CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and translating documents to 11 languages with bilingual output.
 
-Verified against the published stable CLI **0.1.9** on **2026-09-21**. Check the installed version's help before using newer options. Website features are not automatically CLI features; see [translation and export modes](references/command-reference.md#translation-and-export-modes).
+Verified against CLI **0.1.11** on **2026-09-21**. Check the installed version's help before using newer options. Website features are not automatically CLI features; see [translation and export modes](references/command-reference.md#translation-and-export-modes).
 
 **IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). Batch commands always run sequentially (concurrency is hardcoded to 1). Violating this causes "task limit exceeded" errors.
 
@@ -87,7 +87,7 @@ Inform the user of the version change before proceeding.
 ## Authentication
 
 ```bash
-# Client mode (default) — reuses Doc2X desktop app session
+# Auto mode — saved CLI OAuth login if present, otherwise desktop session
 doc2x parse ./file.pdf
 
 # OAuth mode — no desktop app needed; browser must reach this machine's callback
@@ -102,7 +102,7 @@ doc2x login --no-browser
 doc2x logout
 ```
 
-`login` stores credentials but does **not** change the default auth mode. Use `--auth-mode oauth` or set `authMode: oauth` in a config passed with `--config`. `--no-browser` only prints a URL: it still needs a callback to a random local port within 120 seconds, not a device-code flow. For remote machines, read [config and authentication](references/config-and-auth.md#choosing-the-right-mode).
+Since 0.1.11, ordinary commands automatically use the saved CLI login. Explicit `--auth-mode client/oauth` or `authMode` in `--config` overrides auto selection; OAuth refresh failure never falls back to another desktop account. On 0.1.9, pass `--auth-mode oauth` after login. `--no-browser` only prints a URL: it still needs a callback to a random local port within 120 seconds, not a device-code flow. For remote machines, read [config and authentication](references/config-and-auth.md#choosing-the-right-mode).
 
 Client mode connects to the desktop client at `127.0.0.1:34123`. Falls back to encrypted storage at:
 - macOS: `~/Library/Application Support/doc2x/doc2x-store-data.json`
@@ -161,7 +161,7 @@ doc2x translate ./paper.pdf --contextual-translation                 # Enhanced 
 
 Languages: `zh en ja fr ru pt pt-BR es de ko ar`.
 
-Fixed-layout PDF (`--translate-type pdf`) preserves page layout and exports a side-by-side bilingual PDF (original left, translation right). In stable 0.1.9, `--convert-trans` does not change this PDF output, and choosing `--to docx` does not turn it into preserved-layout Word. `--pdf-font-strategy`: `global-consistent` (default) or `page-optimal`. Use `--translate-type md --convert-trans translate --to docx` for a reflowed translation-only Word document.
+Fixed-layout PDF (`--translate-type pdf`) preserves page layout and exports a side-by-side bilingual PDF (original left, translation right). In 0.1.11 it defaults to `--to pdf` and rejects incompatible formats or `--convert-trans origin/translate` before upload; `--to none` skips export. Version 0.1.9 silently ignored those incompatible options. `--pdf-font-strategy`: `global-consistent` (default) or `page-optimal`. Use `--translate-type md --convert-trans translate --to docx` for a reflowed translation-only Word document.
 
 Do not suggest `combinedTranslate` or combined-output CLI flags; the current stable CLI does not expose them.
 
@@ -213,7 +213,7 @@ CSV format (RFC 4180): `origin,translate,originLang,translateLang`. Header auto-
 | Option | Default | Description |
 |--------|---------|-------------|
 | `--config <path>` | — | Config file (YAML/JSON) |
-| `--auth-mode` | `client` | `client` or `oauth` |
+| `--auth-mode` | auto selection | `auto`, `client`, or `oauth` |
 | `--timeout <ms>` | `60000` | API timeout |
 | `--retry <n>` | `2` | Download retry count |
 | `--json` | false | JSON output |

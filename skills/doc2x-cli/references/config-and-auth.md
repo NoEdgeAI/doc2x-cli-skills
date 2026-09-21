@@ -11,7 +11,11 @@ npm i -g @noedgeai-org/doc2x-cli@latest
 
 ## Authentication Modes
 
-### Client Mode (`--auth-mode client`, default)
+### Automatic selection (default since 0.1.11)
+
+Use the saved CLI OAuth login when present; otherwise use the desktop client. Explicit flags or `authMode` in the selected config override auto selection. OAuth refresh failures never switch to the desktop account. `logout` clears the CLI login.
+
+### Client Mode (`--auth-mode client`)
 
 Reuses an authenticated Doc2X desktop client session. The CLI connects to the desktop client's local server at `http://127.0.0.1:34123` to fetch the session token.
 
@@ -24,7 +28,7 @@ Reuses an authenticated Doc2X desktop client session. The CLI connects to the de
 
 ### OAuth Mode (`--auth-mode oauth`)
 
-Browser-based OAuth 2.0 login with PKCE. Run `doc2x login` to authenticate, then use `--auth-mode oauth` for subsequent commands. Login does not change the default `client` mode. The CLI handles token refresh; do not edit or share the credential file.
+Browser-based OAuth 2.0 login with PKCE. Run `doc2x login` to authenticate, then use `--auth-mode oauth` for subsequent commands. In 0.1.11, saved CLI login is selected automatically; explicit `--auth-mode oauth` remains compatible with older versions. The CLI handles token refresh; do not edit or share the credential file.
 
 ```bash
 # Step 1: Login via browser (one-time)
@@ -47,7 +51,7 @@ doc2x logout
 
 ### Choosing the Right Mode
 
-- **Has desktop client installed and logged in** → use client mode (default)
+- **Want the desktop account** → use `--auth-mode client`
 - **Server/CI environment or no desktop client** → use OAuth mode (`doc2x login` + `--auth-mode oauth`)
 
 The browser must reach the machine running `doc2x login`: the CLI listens on a random `127.0.0.1` port at `/callback`. `--no-browser` prints the URL; it is not a device-code login. Opening a remote server's URL on another computer does not forward the callback. Use a trusted loopback tunnel or log in on the machine with the browser. Never copy credentials into chat.

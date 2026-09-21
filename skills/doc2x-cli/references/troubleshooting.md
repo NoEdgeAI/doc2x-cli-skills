@@ -40,7 +40,7 @@
 
 6. **OAuth mode failure — not logged in or expired**
    - Run `doc2x login` to authenticate via browser.
-   - Then run `doc2x models list --auth-mode oauth`. Login alone does not switch commands away from the default desktop-client mode.
+   - Then run `doc2x models list --auth-mode oauth`. This explicit flag is required by 0.1.9; 0.1.11 automatically uses saved CLI login unless overridden.
    - OAuth tokens auto-refresh when possible.
    - If refresh fails, re-run `doc2x login`.
    - To clear stored credentials: `doc2x logout`
@@ -125,7 +125,7 @@
     - The CLI retries downloads with exponential backoff (configurable via `--retry`).
 
 **Fixed-layout output differs from the requested format**
-- `--translate-type pdf` exports side-by-side bilingual PDF (original left, translation right) even if `--to docx` or `--convert-trans translate` is supplied. This is the published 0.1.9 export path, not a failed Word conversion.
+- In 0.1.11, `--translate-type pdf` defaults to PDF and rejects incompatible `--to`/`--convert-trans` values before uploading. In 0.1.9 those options were silently ignored and the result was a side-by-side bilingual PDF.
 - For reflowed translation-only Word, use `--translate-type md --convert-trans translate --to docx`.
 - Preserved-layout Word and the website's specialized export formats are not exposed by this stable CLI. See [translation and export modes](command-reference.md#translation-and-export-modes).
 
