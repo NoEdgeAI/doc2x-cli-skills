@@ -1,5 +1,7 @@
 # Doc2X CLI — Complete Command Reference
 
+CLI 0.2.0 additions: `account status`, `records list/show`, task-only `usage show`, `models show/guide`, `--receipt` on single-file tasks, and `zotero manifest`. See [account/receipt reference](account-and-receipts.md) and [Zotero workflow](zotero-workflow.md) for contracts and examples. No consumption-history command is exposed.
+
 Verified against npm `@noedgeai-org/doc2x-cli@0.1.11` on 2026-09-21. These are CLI capabilities, not a mirror of the website's format menu.
 
 ## Parse Command

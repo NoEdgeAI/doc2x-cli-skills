@@ -77,6 +77,19 @@ doc2x translate ./paper.pdf --auth-mode oauth --translate-type pdf --target-lang
 
 ## 包含内容
 
+CLI 0.2.0 增加账户/额度/订阅查询、任务回执与结果历史、单任务已报告用量、模型详情和 Zotero manifest。消费账单历史不开放；Zotero manifest 只为外部工具准备文件和元数据，不直接写文献库。
+
+```bash
+doc2x account status --json
+doc2x translate ./paper.pdf --translate-type pdf --receipt ./run.json --json
+doc2x records list --kind translate --limit 20 --json
+doc2x usage show --translate-id ot_example --json
+doc2x models show 10001 --json
+doc2x zotero manifest --receipt ./run.json --library-id 1 --item-key ABCD1234 --out ./import.json --json
+```
+
+请用回执中的真实任务 ID 和 Zotero 工具提供的真实条目 key 替换示例。详见[账户与回执](skills/doc2x-cli/references/account-and-receipts.md)和[Zotero 工作流](skills/doc2x-cli/references/zotero-workflow.md)。
+
 | 技能 | 说明 |
 |------|------|
 | `doc2x-cli` | 将 PDF/图片解析为 Markdown、LaTeX、Word、HTML 或 PDF。支持文档翻译（11 种语言）、批量处理、翻译术语表管理。 |
@@ -89,7 +102,9 @@ skills/doc2x-cli/
 └── references/
     ├── command-reference.md    # 完整命令与选项参考
     ├── config-and-auth.md     # 认证、配置模式、退出码
-    └── troubleshooting.md     # 错误信息与调试指南
+    ├── troubleshooting.md     # 错误信息与调试指南
+    ├── account-and-receipts.md # 账户、任务回执与结果查询
+    └── zotero-workflow.md     # 外部 Zotero 工具导入流程
 ```
 
 ## 卸载

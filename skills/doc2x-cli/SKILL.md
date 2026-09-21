@@ -4,14 +4,14 @@ description: "Installs and operates @noedgeai-org/doc2x-cli for document parsing
 license: MIT
 metadata:
   author: noedgeai
-  version: "0.1.7"
+  version: "0.2.0"
 ---
 
 # Doc2X CLI
 
 CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and translating documents to 11 languages with bilingual output.
 
-Verified against CLI **0.1.11** on **2026-09-21**. Check the installed version's help before using newer options. Website features are not automatically CLI features; see [translation and export modes](references/command-reference.md#translation-and-export-modes).
+Targets CLI **0.2.0**. Check the installed version's help before using newer options. Website features are not automatically CLI features; see [translation and export modes](references/command-reference.md#translation-and-export-modes).
 
 **IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). Batch commands always run sequentially (concurrency is hardcoded to 1). Violating this causes "task limit exceeded" errors.
 
@@ -35,6 +35,10 @@ $ARGUMENTS
 | Manage glossary | `doc2x term list` |
 | Login (OAuth) | `doc2x login` |
 | Logout | `doc2x logout` |
+| Account/quota/subscription | `doc2x account status --json` |
+| Task result history | `doc2x records list --kind translate --limit 20 --json` |
+| One task's reported usage | `doc2x usage show --translate-id ot_example --json` |
+| Model details/guidance | `doc2x models show 10001 --json` / `doc2x models guide` |
 
 ## Preflight — run once before first doc2x command
 
@@ -115,6 +119,12 @@ OAuth mode stores credentials at:
 - Linux: `~/.config/doc2x/cli-oauth-tokens.json`
 
 ## Commands
+
+For account, points, retained history or failure recovery, read [account and receipts](references/account-and-receipts.md). Every parse/translate attempt now creates an atomic receipt, including when later export/download fails. Preserve its task IDs; `--to none` is successful processing without export. Receipt files contain local paths; review before sharing.
+
+For Zotero input/output, read [Zotero workflow](references/zotero-workflow.md). `doc2x zotero manifest` prepares metadata and verifies local artifacts; actual attachment/note writes require a capable external Zotero tool. Never report the manifest as an import.
+
+Account consumption history remains restricted. Do not invent `usage list`, bypass OAuth restrictions, or change accounts to obtain restricted history. `usage show` only uses existing per-task detail data; missing/zero defaults are not confirmed zero charges or refunds.
 
 ### parse
 

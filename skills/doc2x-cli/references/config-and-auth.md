@@ -143,8 +143,8 @@ Useful for CI/CD scripting and error handling:
 - **Per-file preflight**: File size validation and format check run for each individual file.
 - **Skip existing**: When `--skip-existing` is true (default), the CLI resolves the expected output path and skips the file if it already exists.
 - **Concurrency**: Hardcoded to 1 (sequential). Doc2X enforces a server-side concurrent task limit.
-- **Error handling**: With `--continue-on-error`, the batch continues after individual failures and exits with code 6 (BatchPartialFailure). Without it, the batch stops at the first error.
-- **Report**: A JSON report is always written to `--report` path with this structure:
+- **Error handling**: With `--continue-on-error`, the batch continues after individual failures and exits with code 6 (BatchPartialFailure). Without it, the batch stops scheduling at the first error and writes the partial report.
+- **Report (0.2.0)**: After resolving files (outside `--dry-run`), initialize `--report` and atomically update it after each completed/failed file. Pre-validation failures can occur before report creation. The report adds `schemaVersion`, `unprocessed` and per-file receipts; the following shows the legacy-compatible core fields:
 
 ```json
 {
