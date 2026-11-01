@@ -1,17 +1,19 @@
 ---
 name: doc2x-cli
-description: "Installs and operates @noedgeai-org/doc2x-cli for document parsing, translation, and batch processing. Trigger when user mentions doc2x, doc2x-cli, PDF to Markdown, PDF OCR, document translation, batch PDF conversion, or bilingual PDF. Covers install, update, parse, translate, batch, login, logout, models, and term commands. Do NOT trigger for general PDF viewing, browser-based PDF tools, or non-doc2x workflows."
+description: "Installs and operates @noedgeai-org/doc2x-cli for document parsing, translation, retained-result export, and batch processing. Trigger when user mentions doc2x, doc2x-cli, PDF to Markdown, PDF OCR, document translation, multiple export formats without repeated processing, batch PDF conversion, or bilingual PDF. Do NOT trigger for general PDF viewing, browser-based PDF tools, or non-doc2x workflows."
 license: MIT
 metadata:
   author: noedgeai
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Doc2X CLI
 
 CLI tool for parsing PDFs/images to Markdown, LaTeX, Word, HTML, or PDF — and translating documents to 11 languages with bilingual output.
 
-Targets CLI **0.2.0**. Check the installed version's help before using newer options. Website features are not automatically CLI features; see [translation and export modes](references/command-reference.md#translation-and-export-modes).
+Includes CLI **0.3.0** reuse commands. Check `doc2x export --help` and `doc2x parse --help` before using them; the npm stable release may lag this repository. CLI 0.2.0 has receipts but no export/reuse command. If the latest stable lacks these commands, preserve the receipt and explain that the feature requires a newer CLI build; never emulate reuse by repeating parse/translate. Website features are not automatically CLI features; see [translation and export modes](references/command-reference.md#translation-and-export-modes).
+
+**Avoid repeated processing:** For multiple formats of one document, process it once with `--to none --receipt`, then use `export --receipt --to md,docx,html`. For an existing receipt or a failed download, read [result reuse](references/result-reuse.md) first. `--reuse` verifies the same uploaded bytes; ordinary parse/translate commands are not an automatic content cache. Expiry, unavailable results and mismatched files must never trigger an automatic new task.
 
 **IMPORTANT — Serial execution only:** Doc2X enforces a server-side concurrent task limit. You MUST run all doc2x commands sequentially — never launch multiple `doc2x` processes in parallel (no concurrent Agent tool calls, no background tasks, no `&`). Batch commands always run sequentially (concurrency is hardcoded to 1). Violating this causes "task limit exceeded" errors.
 
@@ -28,6 +30,8 @@ $ARGUMENTS
 | Parse image → Markdown | `doc2x parse ./scan.png --to md` |
 | Translate → Chinese | `doc2x translate ./paper.pdf` |
 | Translate → English HTML | `doc2x translate ./paper.pdf --target-language en --to html` |
+| Export a retained task in multiple formats | `doc2x export --receipt ./run.json --to md,docx,html --out ./exports` |
+| Verify the same file and reuse parsing | `doc2x parse ./paper.pdf --reuse ./run.json --to docx` |
 | Preserved-layout bilingual PDF | `doc2x translate ./paper.pdf --translate-type pdf --target-language en --pdf-font-strategy page-optimal` |
 | Batch parse | `doc2x batch parse ./docs` |
 | Batch translate | `doc2x batch translate ./docs --glob "**/*.pdf" --target-language en` |
@@ -121,6 +125,8 @@ OAuth mode stores credentials at:
 ## Commands
 
 For account, points, retained history or failure recovery, read [account and receipts](references/account-and-receipts.md). Every parse/translate attempt now creates an atomic receipt, including when later export/download fails. Preserve its task IDs; `--to none` is successful processing without export. Receipt files contain local paths; review before sharing.
+
+For same-file reuse, multiple output formats, 30-day expiry or retrying export without new processing, read [result reuse](references/result-reuse.md). Fixed-layout translation remains PDF-only. Use the installed command's help as the capability gate.
 
 For Zotero input/output, read [Zotero workflow](references/zotero-workflow.md). `doc2x zotero manifest` prepares metadata and verifies local artifacts; actual attachment/note writes require a capable external Zotero tool. Never report the manifest as an import.
 
@@ -269,3 +275,4 @@ Common issues:
 - `references/command-reference.md`: Complete option tables for all commands, supported formats, processing pipelines
 - `references/config-and-auth.md`: Authentication details, full config schema, batch behavior, exit codes
 - `references/troubleshooting.md`: All error messages with exit codes, validation rules, debugging tips
+- `references/result-reuse.md`: Process once, export multiple formats, verify file identity, expiry and retry boundaries

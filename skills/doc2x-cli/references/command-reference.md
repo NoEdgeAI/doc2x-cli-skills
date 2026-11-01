@@ -1,5 +1,7 @@
 # Doc2X CLI — Complete Command Reference
 
+CLI 0.3.0 functionality adds `export --receipt <path> --to md,docx,html` and `parse/translate --reuse <receipt>`. See [result reuse](result-reuse.md). Gate these commands on installed help: a source update is not evidence that npm `latest` has been published. `export` accepts several comma-separated formats; ordinary new parse/translate tasks still accept one output format.
+
 CLI 0.2.0 additions: `account status`, `records list/show`, task-only `usage show`, `models show/guide`, `--receipt` on single-file tasks, and `zotero manifest`. See [account/receipt reference](account-and-receipts.md) and [Zotero workflow](zotero-workflow.md) for contracts and examples. No consumption-history command is exposed.
 
 Verified against npm `@noedgeai-org/doc2x-cli@0.1.11` on 2026-09-21. These are CLI capabilities, not a mirror of the website's format menu.
@@ -36,6 +38,8 @@ doc2x parse <input> [options]
 | `--out <path>`                     | `./output`   | Output directory or file path                             |
 | `--name <pattern>`                 | `{basename}` | Filename template: {basename}, {date}, {lang}             |
 | `--overwrite`                      | false        | Overwrite existing output files                           |
+| `--receipt <path>`                 | automatic    | New task/export receipt; existing files are not overwritten |
+| `--reuse <receipt>`                | off          | CLI 0.3.0: verify the same file and export its retained result; accepts comma-separated `--to` formats and never creates processing tasks |
 | `--image-models <models...>`       | `[doc2x]`    | OCR models: doc2x (mandatory), optionally mathpix         |
 | `--vision-models <models...>`      | `[]`         | LLM vision models (use IDs from `doc2x models list`)     |
 | `--image-hosting <mode>`           | `local`      | Image source: local or online                             |

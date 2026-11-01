@@ -77,6 +77,20 @@ doc2x translate ./paper.pdf --auth-mode oauth --translate-type pdf --target-lang
 
 ## 包含内容
 
+CLI 0.3.0 功能构建增加“一次处理，多格式导出”。先检查 `doc2x export --help`；Skill 版本不代表 npm 已发布对应 CLI。若最新稳定版仍是 0.2.0，保留回执并等待支持该命令的 CLI，不要重复解析或翻译来模拟复用。
+
+```bash
+doc2x parse ./paper.pdf --to none --receipt ./parsed.json
+doc2x export --receipt ./parsed.json --to md,docx,html --out ./exports
+
+doc2x translate ./paper.pdf --translate-type md --target-language en --to none --receipt ./translated.json
+doc2x export --receipt ./translated.json --to md,docx,html --out ./translated-exports
+
+doc2x parse ./paper.pdf --reuse ./parsed.json --to tex --out ./more-exports
+```
+
+已有回执时直接导出，省略第一次处理。复用命令不新建解析或翻译任务；每种格式存入独立子目录。`--reuse` 按上传内容的 SHA-256 校验文件，普通 `parse/translate` 不会自动查缓存。固定排版翻译仍只支持 PDF。过期（自原任务起满 30 天）、删除、账号不可访问或下载失败时，不会自动重新扣额度处理。应在过期前保存本地文件和图片资源。详见[结果复用与过期处理](skills/doc2x-cli/references/result-reuse.md)。
+
 CLI 0.2.0 增加账户/额度/订阅查询、任务回执与结果历史、单任务已报告用量、模型详情和 Zotero manifest。消费账单历史不开放；Zotero manifest 只为外部工具准备文件和元数据，不直接写文献库。
 
 ```bash
@@ -104,6 +118,7 @@ skills/doc2x-cli/
     ├── config-and-auth.md     # 认证、配置模式、退出码
     ├── troubleshooting.md     # 错误信息与调试指南
     ├── account-and-receipts.md # 账户、任务回执与结果查询
+    ├── result-reuse.md         # 同一结果多格式导出、文件校验与过期处理
     └── zotero-workflow.md     # 外部 Zotero 工具导入流程
 ```
 
