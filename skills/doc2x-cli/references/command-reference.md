@@ -88,6 +88,7 @@ Inherits all parse options, plus translation-specific options:
 | `--term-id <id>`                   | `""`     | Custom glossary ID for domain-specific terms              |
 | `--font-color-extraction`          | false    | Extract font color information                            |
 | `--pdf-font-strategy <strategy>`   | `global-consistent` | Fixed-layout PDF font strategy: global-consistent, page-optimal |
+| `--pdf-font-family <font>`         | `default` | Fixed-layout PDF translated-text font: default, serif, kai, fangsong, arial (depends on the target language; see below) |
 | `--convert-trans <t>`              | `both`   | Reflowed exports only: both, origin, or translate; fixed-layout PDF requires both |
 | `--contextual-translation`         | false    | Enable contextual translation enhancement                 |
 | `--ignore-translate-types <t...>`  | `[]`     | Skip element types: table, code, figure, reference        |
@@ -105,9 +106,23 @@ Inherits all parse options, plus translation-specific options:
 
 **Fixed-layout PDF translation** always exports `.pdf` when an export is requested (`--to none` skips export). `--pdf-font-strategy` accepts `global-consistent` (default) or `page-optimal`. The CLI calls the combined fixed-layout export with `reverseOrder: false`; the verified output places original and translation side by side on each output page. It does not pass `--convert-trans` to that export and has no CLI option to switch to translation-only, reverse-order, or above/below output. Do not invent flags for those modes.
 
+**Translated-text font** (`--pdf-font-family`, fixed-layout PDF only). Requires a CLI build whose `doc2x translate --help` lists the option; older builds reject it as an unknown option. The fonts a target language offers:
+
+| `--target-language` | `--pdf-font-family` values |
+|---------------------|----------------------------|
+| `zh` | `default`, `serif` (Songti), `kai` (Kaiti), `fangsong` (Fangsong) |
+| `ja`, `ko` | `default`, `serif` (Mincho / Myeongjo) |
+| `en`, `fr`, `de`, `es`, `pt`, `pt-BR`, `ru` | `default`, `serif` (Times New Roman style), `arial` (Arial style) |
+| `ar` | `default` |
+
+`default` is the font used when the option is omitted. A font named on the command line that the target language does not offer is rejected before upload (exit code 1), so no quota is spent; do not retry with the same combination. A font that comes from the config file is a preference: for a target language that does not offer it, the run uses the default font and prints a warning. `--translate-type md` accepts the option and ignores it. The font is recorded in the receipt as `pdfFontFamily` and, like the other processing parameters, cannot be changed with `--reuse`; a different font needs a new translation.
+
 ```bash
 # No desktop client needed after OAuth login
 doc2x translate ./paper.pdf --auth-mode oauth --translate-type pdf --target-language zh --pdf-font-strategy page-optimal --out ./output
+
+# Kaiti for the Chinese translation (needs a CLI build with --pdf-font-family)
+doc2x translate ./paper.pdf --auth-mode oauth --translate-type pdf --target-language zh --pdf-font-family kai --out ./output
 
 # Editable translation, with reflowed layout
 doc2x translate ./paper.pdf --auth-mode oauth --translate-type md --convert-trans translate --to docx --docx-template technical --out ./output
@@ -143,7 +158,7 @@ Inherits all parse and translate options. Batch-specific options:
 
 **Note:** Batch always runs sequentially (concurrency hardcoded to 1). Running multiple `doc2x` commands in parallel will trigger "task limit exceeded" errors.
 
-Batch inherits parse and translate options, including `--docx-template` for Word exports and `--pdf-font-strategy` for fixed-layout PDF translation.
+Batch inherits parse and translate options, including `--docx-template` for Word exports and `--pdf-font-strategy` / `--pdf-font-family` for fixed-layout PDF translation.
 
 **Validation:**
 - `<action>` must be `parse` or `translate` — otherwise: `Invalid batch action: "<value>". Use "parse" or "translate".`
