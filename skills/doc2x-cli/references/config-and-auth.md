@@ -89,6 +89,7 @@ defaults:
     termId: ""
     fontColorExtraction: false
     pdfFontStrategy: global-consistent
+    pdfFontFamily: default
     ignoreTranslateTypes: []
     convertTrans: both
     contextualTranslation: false
@@ -112,6 +113,7 @@ doc2x batch translate ./docs --config ./doc2x.config.yaml
 Config option values:
 - `docxTemplate`: `default`, `general`, `academic`, `business`, `elegant`, `minimal`, `technical`; V3 Word exports only.
 - `pdfFontStrategy`: `global-consistent` (default) or `page-optimal`; fixed-layout PDF translation only.
+- `pdfFontFamily`: `default` (default), `serif`, `kai`, `fangsong` or `arial`; fixed-layout PDF translation only, and only the fonts the target language offers (see the command reference). Needs a CLI build with `--pdf-font-family`. A value set here applies to every fixed-layout translation, so a font that one target language lacks makes those runs fail validation; pass `--pdf-font-family default` for them.
 
 **For translate commands**, config resolution merges: CLI args → global config → config.defaults.parse → config.defaults.translate → built-in defaults.
 
