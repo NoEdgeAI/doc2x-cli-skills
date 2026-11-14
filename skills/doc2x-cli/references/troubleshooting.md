@@ -89,7 +89,7 @@
       - `--pdf-font-family`: default, serif, kai, fangsong, arial
       - `--convert-trans`: both, origin, translate
       - `--ignore-translate-types`: table, code, figure, reference
-    - **"--pdf-font-family <font> is not available for --target-language <lang>. Fonts for <lang>: <list>"** (exit code 1): the id is valid but that target language does not offer it (for example `kai` with `en`). Pick one from the listed fonts or omit the option; nothing was uploaded.
+    - **"--pdf-font-family <font> is not available for --target-language <lang>. Fonts for <lang>: <list>"** (exit code 1): the id is valid but that target language does not offer it (for example `kai` with `en`). Pick one from the listed fonts or omit the option; nothing was uploaded. This error is only for a font named on the command line; the same font set in the config file falls back to the default font with a warning.
 13. **"Invalid batch action: "<value>". Use "parse" or "translate"."** (exit code 1)
     - The batch action must be exactly `parse` or `translate`.
 

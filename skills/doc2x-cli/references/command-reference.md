@@ -115,7 +115,7 @@ Inherits all parse options, plus translation-specific options:
 | `en`, `fr`, `de`, `es`, `pt`, `pt-BR`, `ru` | `default`, `serif` (Times New Roman style), `arial` (Arial style) |
 | `ar` | `default` |
 
-`default` is the font used when the option is omitted. A font the target language does not offer is rejected before upload (exit code 1), so no quota is spent; do not retry with the same combination. `--translate-type md` accepts the option and ignores it. The font is recorded in the receipt as `pdfFontFamily` and, like the other processing parameters, cannot be changed with `--reuse`; a different font needs a new translation.
+`default` is the font used when the option is omitted. A font named on the command line that the target language does not offer is rejected before upload (exit code 1), so no quota is spent; do not retry with the same combination. A font that comes from the config file is a preference: for a target language that does not offer it, the run uses the default font and prints a warning. `--translate-type md` accepts the option and ignores it. The font is recorded in the receipt as `pdfFontFamily` and, like the other processing parameters, cannot be changed with `--reuse`; a different font needs a new translation.
 
 ```bash
 # No desktop client needed after OAuth login
